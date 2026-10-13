@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wetink</title>
+<style>
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --panel-2: #f0f2f5; --line: #e1e4ea; --text: #1b1f27;
+  --muted: #6a7282; --faint: #9aa1ad; --accent: #4f6bed; --ok: #1f9d55; --warn: #c27c0e;
+  --bad: #d64545; --shadow: 0 1px 2px rgba(16,24,40,.06);
+  --k-decision: #7c4ddb; --k-fact: #2f74d0; --k-artifact: #0f9488; --k-open_question: #c27c0e;
+  --k-hypothesis: #8a8f99;
+  --m0: #e0583a; --m1: #1f9d55; --m2: #4f6bed; --m3: #c0399a; --m4: #b7791f;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1115; --panel: #161920; --panel-2: #1d212a; --line: #2a2f3a; --text: #e6e8ee;
+    --muted: #9099a8; --faint: #646c7a; --accent: #7b93ff; --ok: #3ccf7a; --warn: #e9a23b;
+    --bad: #ff6b6b; --shadow: none;
+    --k-decision: #a78bfa; --k-fact: #60a5fa; --k-artifact: #2dd4bf; --k-open_question: #fbbf24;
+    --k-hypothesis: #9ca3af;
+    --m0: #ff8a65; --m1: #4ade80; --m2: #93a8ff; --m3: #f472b6; --m4: #fbbf24;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1115; --panel: #161920; --panel-2: #1d212a; --line: #2a2f3a; --text: #e6e8ee;
+  --muted: #9099a8; --faint: #646c7a; --accent: #7b93ff; --ok: #3ccf7a; --warn: #e9a23b;
+  --bad: #ff6b6b; --shadow: none;
+  --k-decision: #a78bfa; --k-fact: #60a5fa; --k-artifact: #2dd4bf; --k-open_question: #fbbf24;
+  --k-hypothesis: #9ca3af;
+  --m0: #ff8a65; --m1: #4ade80; --m2: #93a8ff; --m3: #f472b6; --m4: #fbbf24;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--text); font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+button, select, input { font: inherit; color: inherit; }
+a { color: var(--accent); text-decoration: none; cursor: pointer; }
+.muted { color: var(--muted); } .faint { color: var(--faint); } .mono { font-family: var(--mono); }
+.app { display: grid; grid-template-rows: auto auto 1fr; height: 100vh; }
+
+/* header */
+header { display: flex; align-items: center; gap: 12px; padding: 8px 16px; background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.brand { font-weight: 650; letter-spacing: -.01em; white-space: nowrap; }
+.brand span { color: var(--muted); font-weight: 500; }
+.ctl { display: flex; align-items: center; gap: 6px; }
+select, input[type=number] { background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
+select { max-width: 260px; }
+input[type=number] { width: 58px; }
+button { background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button:disabled { opacity: .5; cursor: default; }
+.spacer { flex: 1; }
+.pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); flex: none; }
+.dot.ok { background: var(--ok); } .dot.bad { background: var(--bad); } .dot.warn { background: var(--warn); }
+
+/* pipeline */
+.pipeline { display: flex; align-items: stretch; gap: 0; padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--line); overflow-x: auto; }
+.stage { flex: 1 1 0; min-width: 140px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-2); transition: border-color .4s, box-shadow .4s; }
+.stage.pulse { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); transition: none; }
+.stage h4 { margin: 0 0 2px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.stage .big { font-size: 18px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.stage .sub { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.arrow { flex: none; align-self: center; width: 22px; text-align: center; color: var(--faint); }
+
+/* columns */
+main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, .95fr); min-height: 0; }
+.col { min-height: 0; display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+.col:last-child { border-right: none; }
+.col-h { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-bottom: 1px solid var(--line); background: var(--panel); font-weight: 600; }
+.col-h .muted { font-weight: 400; }
+.scroll { overflow-y: auto; padding: 12px 14px 40px; flex: 1; min-height: 0; }
+.empty { color: var(--muted); padding: 24px 4px; text-align: center; }
+
+/* timeline */
+.task { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.ev { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--m); border-radius: 8px; margin-bottom: 8px; box-shadow: var(--shadow); }
+.ev-h { display: flex; gap: 8px; align-items: baseline; padding: 6px 10px; font-size: 12px; }
+.who { font-weight: 650; color: var(--m); }
+.ev-st { margin-left: auto; white-space: nowrap; }
+.ev-out { padding: 0 10px 8px; font-size: 12px; }
+.ev-out pre { margin: 4px 0 0; max-height: 9.5em; overflow: hidden; white-space: pre-wrap; word-break: break-word; font-family: var(--mono); font-size: 11px; color: var(--muted); border-left: 2px solid var(--line); padding-left: 8px; }
+.ev.via-mcp { border-left-style: dashed; }
+.ev-call { padding: 0 10px 8px; font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; }
+.ent { padding: 6px 10px 7px; border-top: 1px dashed var(--line); cursor: pointer; }
+.ent:hover { background: var(--panel-2); }
+.ent.sel { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.ent.rel { background: color-mix(in srgb, var(--warn) 12%, transparent); }
+.ent .txt { white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.ent.sel .txt { -webkit-line-clamp: unset; }
+.ent.closed .txt, .ent.hidden .txt { color: var(--muted); }
+.ent.closed .txt { text-decoration: line-through; text-decoration-color: var(--faint); }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-bottom: 3px; font-size: 11.5px; }
+.chip { display: inline-flex; align-items: center; padding: 0 6px; border-radius: 4px; font-size: 11px; font-weight: 600; line-height: 17px; color: var(--c, var(--muted)); background: color-mix(in srgb, var(--c, var(--muted)) 14%, transparent); white-space: nowrap; }
+.topic { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.score { font-variant-numeric: tabular-nums; color: var(--muted); }
+.meter { display: inline-block; width: 34px; height: 5px; border-radius: 3px; background: var(--line); vertical-align: middle; overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--muted); }
+.state { margin-left: auto; font-size: 11px; white-space: nowrap; }
+.state.live { color: var(--ok); } .state.cut { color: var(--warn); } .state.hidden, .state.closed { color: var(--faint); }
+.state.pending { color: var(--accent); }
+.relline { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+.relline b { font-weight: 600; color: var(--text); }
+.shimmer { background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 18%, transparent), transparent); background-size: 200% 100%; animation: sh 1.2s linear infinite; }
+@keyframes sh { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+.new-in { animation: flash 1.6s ease-out; }
+@keyframes flash { from { background: color-mix(in srgb, var(--accent) 22%, transparent); } to { background: transparent; } }
+
+/* board */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 10px; box-shadow: var(--shadow); }
+.card-h { padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.card-h .name { font-family: var(--mono); font-weight: 650; }
+.card-h .desc { color: var(--muted); font-size: 12px; }
+.card-h .flag { color: var(--warn); font-size: 12px; font-weight: 600; margin-top: 2px; }
+.card.disputed { border-color: color-mix(in srgb, var(--warn) 60%, var(--line)); }
+.bent { display: grid; grid-template-columns: 18px 1fr; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--line); cursor: pointer; }
+.bent:first-of-type { border-top: none; }
+.bent:hover { background: var(--panel-2); }
+.bent.sel { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.bent.rel { background: color-mix(in srgb, var(--warn) 12%, transparent); }
+.bent.conflict { box-shadow: inset 3px 0 0 var(--bad); }
+.bent.cut { opacity: .6; }
+.rank { color: var(--faint); font-variant-numeric: tabular-nums; font-size: 12px; text-align: right; }
+.bent .txt { white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.mdot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--m); }
+.hid-toggle { padding: 5px 10px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); cursor: pointer; user-select: none; }
+.hid-toggle:hover { color: var(--text); }
+.bent.hid .txt { color: var(--muted); }
+.bent.hid.closed .txt { text-decoration: line-through; text-decoration-color: var(--faint); }
+
+/* inspector */
+.tabs { display: flex; gap: 2px; padding: 0 8px; border-bottom: 1px solid var(--line); background: var(--panel); }
+.tab { padding: 8px 10px; border: none; background: none; border-bottom: 2px solid transparent; border-radius: 0; color: var(--muted); }
+.tab.on { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+.tab .n { font-size: 11px; color: var(--faint); margin-left: 3px; }
+.sec { margin-bottom: 16px; }
+.sec h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 6px; font-weight: 600; display: flex; gap: 8px; }
+.sec h3 .faint { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.fulltext { white-space: pre-wrap; word-break: break-word; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+.bars { display: grid; grid-template-columns: minmax(70px, max-content) 1fr 44px; gap: 3px 8px; align-items: center; font-size: 12px; }
+.bars .lab { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.bars .lab.on { font-weight: 650; }
+.bars .bar { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.bars .bar i { display: block; height: 100%; background: var(--faint); }
+.bars .bar.on i { background: var(--accent); }
+.bars .pct { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.verdict { border-left: 3px solid var(--accent); padding: 6px 10px; background: var(--panel); border-radius: 0 6px 6px 0; margin-top: 8px; }
+.verdict.warn { border-color: var(--warn); } .verdict.bad { border-color: var(--bad); } .verdict.ok { border-color: var(--ok); }
+.cand { display: grid; grid-template-columns: 44px 1fr 44px; gap: 6px; padding: 5px 0; border-top: 1px solid var(--line); font-size: 12px; }
+.cand.on { font-weight: 600; }
+.cand .ct { white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: 2px 10px; font-size: 12px; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; }
+pre.handoff { white-space: pre-wrap; word-break: break-word; font-family: var(--mono); font-size: 11.5px; line-height: 1.5; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin: 0; }
+pre.handoff .h { font-weight: 700; color: var(--text); }
+pre.handoff .warn { color: var(--warn); font-weight: 600; }
+.check { display: grid; grid-template-columns: 18px 1fr; gap: 6px; padding: 6px 0; border-top: 1px solid var(--line); font-size: 12px; }
+.check .ok { color: var(--ok); font-weight: 700; } .check .no { color: var(--bad); font-weight: 700; }
+.wire { padding: 5px 0; border-top: 1px solid var(--line); font-size: 12px; }
+.wire .p { white-space: pre-wrap; word-break: break-word; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.log { font-family: var(--mono); font-size: 11.5px; white-space: pre-wrap; word-break: break-word; }
+.summary { display: flex; gap: 8px; align-items: baseline; margin-bottom: 8px; flex-wrap: wrap; }
+.big-score { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 1100px) {
+  .app { height: auto; }
+  main { grid-template-columns: 1fr; }
+  .col { border-right: none; border-bottom: 1px solid var(--line); max-height: none; }
+  .scroll { max-height: 75vh; }
+  header, .pipeline { padding-left: 16px; padding-right: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">wetink <span>· shared context</span></div>
+    <div class="ctl">
+      <select id="session" title="Session"></select>
+      <label class="ctl muted" title="Switch to new sessions and keep the timeline scrolled to the latest item"><input type="checkbox" id="follow" checked> follow</label>
+    </div>
+    <div class="ctl">
+      <select id="scenario" title="Scenario to run"></select>
+      <label class="ctl muted" title="Seconds between steps">pace <input type="number" id="pace" min="0" max="10" step="0.5" value="1.5"></label>
+      <button class="primary" id="run">Run test</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="pills" id="pills"></div>
+  </header>
+  <div class="pipeline" id="pipeline"></div>
+  <main>
+    <section class="col">
+      <div class="col-h">Timeline <span class="muted" id="tl-meta"></span></div>
+      <div class="scroll" id="timeline"></div>
+    </section>
+    <section class="col">
+      <div class="col-h">Shared context <span class="muted" id="board-meta"></span></div>
+      <div class="scroll" id="board"></div>
+    </section>
+    <section class="col">
+      <div class="tabs" id="tabs"></div>
+      <div class="scroll" id="inspector"></div>
+    </section>
+  </main>
+</div>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const fmt = (x, d = 1) => (x == null ? "–" : Number(x).toFixed(d));
+const pct = (p) => (p == null ? "–" : Math.round(p * 100) + "%");
+const KIND_LABEL = { decision: "decision", fact: "fact", artifact: "artifact", open_question: "open question", hypothesis: "hypothesis" };
+const REL_ICON = { replaces: "↻", answers: "✓", contradicts: "⚡", restates: "=" };
+const WETINK_TOOLS = new Set(["get_shared_context", "share_context"]);
+const TABS = ["entry", "handoff", "checks", "wire", "log"];
+
+const S = {
+  config: null, sessions: [], session: null, data: null, system: {}, wire: [], logs: [],
+  selected: null, tab: "entry", exclude: "", follow: true, open: new Set(), seen: new Set(),
+  masters: [], fetching: false, again: false,
+};
+
+function store(k, v) { try { localStorage.setItem("wetink." + k, v); } catch {} }
+function load(k) { try { return localStorage.getItem("wetink." + k); } catch { return null; } }
+
+// ---------- data ----------
+async function getJSON(url, opts) {
+  const r = await fetch(url, opts);
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function loadSessions() {
+  S.sessions = await getJSON("/api/sessions");
+  const sel = $("session");
+  sel.innerHTML = S.sessions.length
+    ? S.sessions.map((s) => `<option value="${esc(s.session)}">${esc(s.session)} · ${s.events} items${s.pending ? ` · ${s.pending} pending` : ""}</option>`).join("")
+    : `<option value="">no sessions yet</option>`;
+  if (S.session) sel.value = S.session;
+}
+
+async function refresh() {
+  if (!S.session) { render(); return; }
+  if (S.fetching) { S.again = true; return; }
+  S.fetching = true;
+  try {
+    const q = new URLSearchParams();
+    if (S.exclude) q.set("exclude_master", S.exclude);
+    const data = await getJSON(`/api/sessions/${encodeURIComponent(S.session)}?${q}`);
+    if (data.session === S.session) { S.data = data; render(); }
+  } catch (e) { console.error(e); }
+  finally {
+    S.fetching = false;
+    if (S.again) { S.again = false; refresh(); }
+  }
+}
+
+function selectSession(name) {
+  if (name === S.session) return;
+  S.session = name; S.data = null; S.selected = null; S.exclude = ""; S.seen = new Set(); S.open = new Set();
+  $("session").value = name;
+  history.replaceState(null, "", "#" + encodeURIComponent(name));
+  render(); refresh();
+}
+
+// ---------- helpers ----------
+function masterColor(m) {
+  let i = S.masters.indexOf(m);
+  if (i < 0) { S.masters.push(m); i = S.masters.length - 1; }
+  return `var(--m${i % 5})`;
+}
+const kindChip = (k) => k ? `<span class="chip" style="--c: var(--k-${k})">${KIND_LABEL[k] || k}</span>` : `<span class="chip">…</span>`;
+const meter = (score) => score == null ? "" : `<span class="meter"><i style="width:${((score - 1) / 4) * 100}%"></i></span>`;
+
+function entryState(e, handoffIds) {
+  const T = S.config.thresholds;
+  if (e.status === "pending") return { cls: "pending", label: "classifying…" };
+  if (e.status === "superseded") return { cls: "closed", label: `superseded by #${e.closed_by}` };
+  if (e.status === "resolved") return { cls: "closed", label: `answered by #${e.closed_by}` };
+  if (e.status === "duplicate") return { cls: "closed", label: `duplicate of #${e.related_id}` };
+  if (!e.shown) {
+    if (e.kind === "hypothesis") return { cls: "hidden", label: "hidden: hypothesis" };
+    const min = e.kind === "open_question" ? T.visible_question_score : T.visible_score;
+    return { cls: "hidden", label: `hidden: relevance ${fmt(e.score)} < ${min}` };
+  }
+  if (handoffIds.has(e.id)) return { cls: "live", label: "in handoff" };
+  if (S.exclude && e.master === S.exclude) return { cls: "cut", label: "excluded master" };
+  return { cls: "cut", label: `cut (rank ${e.topic_rank})` };
+}
+
+function callOf(events, ev) {
+  const id = ev.item && ev.item.call_id;
+  const c = events.find((x) => x.master === ev.master && x.item && x.item.type === "function_call" && x.item.call_id === id);
+  return c ? c.item : null;
+}
+
+function relLine(e) {
+  if (!e.relation || e.relation === "new") return "";
+  const icon = REL_ICON[e.relation] || "";
+  return `<div class="relline">${icon} <b>${e.relation}</b> <a data-id="${e.related_id}">#${e.related_id}</a> · p ${fmt(e.relation_prob, 2)}</div>`;
+}
+
+function related(id) {
+  const out = new Set();
+  if (id == null || !S.data) return out;
+  const e = S.data.entries.find((x) => x.id === id);
+  if (e) { if (e.related_id) out.add(e.related_id); if (e.closed_by) out.add(e.closed_by); }
+  for (const x of S.data.entries) if (x.related_id === id || x.closed_by === id) out.add(x.id);
+  return out;
+}
+
+function conflictIds(entries) {
+  const byId = new Map(entries.map((e) => [e.id, e]));
+  const ids = new Set();
+  for (const e of entries) {
+    const t = byId.get(e.related_id);
+    if (e.relation === "contradicts" && e.status === "active" && t && t.status === "active") { ids.add(e.id); ids.add(t.id); }
+  }
+  return ids;
+}
+
+const ms = (a, b) => (a && b ? Math.max(0, new Date(b) - new Date(a)) : null);
+
+// ---------- render ----------
+function render() {
+  renderPills(); renderPipeline(); renderTimeline(); renderBoard(); renderTabs(); renderInspector();
+}
+
+function renderPills() {
+  const sys = S.system;
+  const pill = (name, status, extra = "") => {
+    const cls = status === "ok" ? "ok" : status ? "bad" : "";
+    return `<span class="pill" title="${esc(status || "unknown")}"><span class="dot ${cls}"></span>${name}${extra}</span>`;
+  };
+  const run = sys.run;
+  $("pills").innerHTML = [
+    run && run.status === "running" ? `<span class="pill"><span class="dot warn"></span>running ${esc(run.session)}</span>` : "",
+    pill("NATS", sys.nats), pill("Postgres", sys.postgres),
+    pill("d1-3B", sys.classifier), pill("namer", sys.namer),
+  ].join("");
+}
+
+function pulse(...ids) {
+  for (const id of ids) {
+    const el = document.querySelector(`[data-stage="${id}"]`);
+    if (!el) continue;
+    el.classList.add("pulse");
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove("pulse"), 500);
+  }
+}
+
+function renderPipeline() {
+  const d = S.data, sys = S.system;
+  const ev = d ? d.events : [], en = d ? d.entries : [];
+  const masters = [...new Set(ev.map((e) => e.master))];
+  const processed = ev.filter((e) => e.classified_at).length;
+  const errors = ev.filter((e) => e.classify_error).length;
+  const traces = en.map((e) => e.trace).filter(Boolean);
+  const avg = (xs) => (xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : null);
+  const cms = avg(traces.map((t) => t.classify && t.classify.ms).filter((x) => x != null));
+  const rms = avg(traces.map((t) => t.relate && t.relate.ms).filter((x) => x != null));
+  const named = traces.filter((t) => t.classify && t.classify.named).length;
+  const shown = en.filter((e) => e.shown).length;
+  const closed = en.filter((e) => ["superseded", "resolved", "duplicate"].includes(e.status)).length;
+  const hidden = en.filter((e) => e.status === "active" && !e.shown).length;
+  const conflicts = conflictIds(en).size / 2;
+  const cons = (sys.consumers || []).filter((c) => !S.session || c.name === `eval-${S.session}` || c.name === "store");
+  const wireN = S.wire.filter((w) => w.session === S.session).length;
+  const h = d ? d.handoff : null;
+  const chars = h && h.input.length ? h.input[0].content[0].text.length : 0;
+  const stage = (id, title, big, subs) => `<div class="stage" data-stage="${id}"><h4>${title}</h4><div class="big">${big}</div>${subs.map((s) => `<div class="sub">${s}</div>`).join("")}</div>`;
+  const arrow = `<div class="arrow">→</div>`;
+  $("pipeline").innerHTML = [
+    stage("masters", "Masters (tap)", masters.length ? `${masters.length} masters` : "–", [
+      masters.map((m) => `<span class="mdot" style="--m:${masterColor(m)}"></span> ${esc(m)} ${ev.filter((e) => e.master === m).length}`).join(" &nbsp;") || "no items yet",
+    ]),
+    arrow,
+    stage("nats", "NATS JetStream", sys.stream ? `${sys.stream.messages} msgs` : "–", [
+      `${wireN} seen live this session`,
+      cons.length ? cons.map((c) => `${esc(c.name)}: ${c.pending} pending, ${c.ack_pending} unacked`).join("<br>") : "no consumer for this session",
+    ]),
+    arrow,
+    stage("consumer", "Consumer → events", `${processed}/${ev.length}`, [
+      `${ev.length - processed} pending${errors ? `, <span style="color:var(--bad)">${errors} failed</span>` : ""}`,
+      "stored raw, processed in stream order",
+    ]),
+    arrow,
+    stage("classifier", "Classifier (d1-3B)", `${en.filter((e) => e.status !== "pending").length}/${en.length} entries`, [
+      `classify ${cms ?? "–"} ms · relate ${rms ?? "–"} ms`,
+      `${named} topic${named === 1 ? "" : "s"} named by ${esc(S.config?.namer || "namer")}`,
+    ]),
+    arrow,
+    stage("context", "Shared context", `${shown} visible`, [
+      `${hidden} hidden · ${closed} closed`,
+      `${conflicts} conflict${conflicts === 1 ? "" : "s"}`,
+    ]),
+    arrow,
+    stage("handoff", "Handoff", h ? `${h.items} entries` : "–", [
+      h ? `${chars.toLocaleString()} chars · upto seq ${h.upto_seq}` : "",
+      h && h.pending ? `${h.pending} items not yet in` : "up to date",
+    ]),
+  ].join("");
+}
+
+function renderTimeline() {
+  const el = $("timeline");
+  const d = S.data;
+  if (!S.session) { el.innerHTML = `<div class="empty">No sessions yet. Pick a scenario and press <b>Run test</b>, or run <span class="mono">wetink seed</span>.</div>`; $("tl-meta").textContent = ""; return; }
+  if (!d) { el.innerHTML = `<div class="empty">Loading…</div>`; return; }
+  const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+  const handoffIds = new Set(d.handoff.entry_ids || []);
+  const rel = related(S.selected);
+  const byEvent = new Map();
+  for (const e of d.entries) { if (!byEvent.has(e.event_id)) byEvent.set(e.event_id, []); byEvent.get(e.event_id).push(e); }
+  const out = [];
+  if (d.task) out.push(`<div class="task"><div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:.05em">Task</div>${esc(d.task)}</div>`);
+  for (const ev of d.events) {
+    const color = masterColor(ev.master);
+    const item = ev.item || {};
+    const ents = byEvent.get(ev.id) || [];
+    let st;
+    if (ev.classify_error) st = `<span style="color:var(--bad)" title="${esc(ev.classify_error)}">failed</span>`;
+    else if (ev.classified_at) st = `<span class="faint" title="received → processed">✓ ${ms(ev.received_at, ev.classified_at)} ms</span>`;
+    else st = `<span style="color:var(--accent)">${ents.length ? "classifying" : "queued"}…</span>`;
+    const isNew = !S.seen.has("ev" + ev.id);
+    S.seen.add("ev" + ev.id);
+    let body = "";
+    const call = item.type === "function_call_output" ? callOf(d.events, ev) : null;
+    if (item.type === "function_call" && ev.via === "mcp") {
+      if (!ents.length) body = `<div class="ev-call">${esc(item.arguments)}</div>`;
+    } else if (item.type === "function_call") {
+      const note = WETINK_TOOLS.has(item.name)
+        ? (item.name === "share_context" ? "the MCP server publishes the share itself (next to it in the stream)" : "pulls shared context; its output never becomes an entry")
+        : "no entry of its own; shown with its output";
+      body = `<div class="ev-call">→ ${esc(item.name)}(${esc(item.arguments)})<div class="faint" style="font-family:system-ui">${note}</div></div>`;
+    } else if (call && WETINK_TOOLS.has(call.name)) {
+      body = `<div class="ev-out"><span class="faint">${call.name === "get_shared_context" ? "what the master was given (not an entry: it would echo others' work as its own)" : "tool result (not an entry)"}</span><pre>${esc(item.output)}</pre></div>`;
+    } else if (ev.rev && !ents.length) {
+      body = `<div class="ev-out faint">${ev.classified_at ? "no new part was final yet" : "…"}</div>`;
+    } else if (!ents.length && !ev.classified_at) {
+      body = `<div class="ent shimmer"><div class="txt muted">${esc(item.type === "message" ? (item.content || []).map((c) => c.text).join("") : item.output || "")}</div></div>`;
+    }
+    for (const e of ents) {
+      const s = entryState(e, handoffIds);
+      const entNew = !S.seen.has("en" + e.id + e.status);
+      S.seen.add("en" + e.id + e.status);
+      body += `<div class="ent ${s.cls} ${e.id === S.selected ? "sel" : rel.has(e.id) ? "rel" : ""} ${e.status === "pending" ? "shimmer" : ""} ${entNew && !isNew ? "new-in" : ""}" data-id="${e.id}">
+        <div class="tags">${e.status === "pending" ? "" : kindChip(e.kind)}${e.declared ? `<span class="chip" style="--c: var(--accent)" title="shared deliberately with share_context">declared</span>` : ""}${e.topic ? `<span class="topic">${esc(e.topic)}</span>` : ""}
+          ${e.score != null ? `<span class="score" title="relevance 1-5, confidence ${fmt(e.confidence, 2)}">${meter(e.score)} ${fmt(e.score)}</span>` : ""}
+          <span class="faint">#${e.id}</span><span class="state ${s.cls}">${esc(s.label)}</span></div>
+        <div class="txt">${esc(e.text)}</div>${relLine(e)}</div>`;
+    }
+    const what = ev.via === "mcp" ? `${esc(item.name)} via MCP`
+      : ev.rev ? `message, streaming (snapshot ${ev.rev})`
+      : esc((item.type || "").replace(/_/g, " ")) + (item.type === "message" && d.events.some((x) => x.rev && x.item.id === item.id) ? ", finished" : "");
+    out.push(`<div class="ev ${isNew ? "new-in" : ""} ${ev.via === "mcp" ? "via-mcp" : ""}" style="--m:${color}"><div class="ev-h"><span class="who">${esc(ev.master)}</span><span class="muted">${ev.via === "mcp" ? "mcp " : ""}seq ${ev.seq} · stream ${ev.stream_seq} · ${what}</span><span class="ev-st">${st}</span></div>${body}</div>`);
+  }
+  if (!d.events.length) out.push(`<div class="empty">Waiting for the first item…</div>`);
+  el.innerHTML = out.join("");
+  $("tl-meta").textContent = `${d.events.length} items · ${d.entries.length} entries`;
+  if (S.follow && nearBottom) el.scrollTop = el.scrollHeight;
+}
+
+function boardEntry(e, handoffIds, conflicts, rel, opts = {}) {
+  const s = entryState(e, handoffIds);
+  const cls = ["bent", opts.hidden ? "hid " + s.cls : "", s.cls === "cut" ? "cut" : "", conflicts.has(e.id) ? "conflict" : "", e.id === S.selected ? "sel" : rel.has(e.id) ? "rel" : ""].join(" ");
+  const conflictWith = conflicts.has(e.id)
+    ? S.data.entries.filter((x) => conflicts.has(x.id) && x.id !== e.id && (x.related_id === e.id || e.related_id === x.id)).map((x) => `<a data-id="${x.id}">#${x.id}</a>`).join(", ")
+    : "";
+  return `<div class="${cls}" data-id="${e.id}"><div class="rank">${opts.hidden ? "" : e.topic_rank ?? ""}</div><div>
+    <div class="tags">${kindChip(e.kind)}<span class="mdot" style="--m:${masterColor(e.master)}" title="${esc(e.master)}"></span><span class="muted">${esc(e.master)}</span>
+      <span class="score">${meter(e.score)} ${fmt(e.score)}</span><span class="faint">#${e.id}</span>
+      ${opts.hidden || s.cls === "cut" ? `<span class="state ${s.cls}">${esc(s.label)}</span>` : ""}</div>
+    <div class="txt">${esc(e.text)}</div>
+    ${conflictWith ? `<div class="relline" style="color:var(--bad)">⚡ conflicts with ${conflictWith}</div>` : ""}</div></div>`;
+}
+
+function renderBoard() {
+  const el = $("board");
+  const d = S.data;
+  if (!d) { el.innerHTML = ""; $("board-meta").textContent = ""; return; }
+  const handoffIds = new Set(d.handoff.entry_ids || []);
+  const conflicts = conflictIds(d.entries);
+  const rel = related(S.selected);
+  const declared = Object.keys(d.topics || {});
+  const done = d.entries.filter((e) => e.status !== "pending");
+  const topics = [...declared];
+  for (const e of done) if (e.topic && !topics.includes(e.topic)) topics.push(e.topic);
+  const cards = [];
+  const card = (key, title, desc, shown, hidden, flag) => {
+    const open = S.open.has(key);
+    return `<div class="card ${flag ? "disputed" : ""}"><div class="card-h"><span class="name">${title}</span>${desc ? ` <span class="desc">${esc(desc)}</span>` : ""}${flag ? `<div class="flag">⚠ ${flag}</div>` : ""}</div>
+      ${shown.map((e) => boardEntry(e, handoffIds, conflicts, rel)).join("") || `<div class="bent"><div></div><div class="faint">nothing visible yet</div></div>`}
+      ${hidden.length ? `<div class="hid-toggle" data-toggle="${esc(key)}">${open ? "▾" : "▸"} ${hidden.length} hidden or closed</div>${open ? hidden.map((e) => boardEntry(e, handoffIds, conflicts, rel, { hidden: true })).join("") : ""}` : ""}</div>`;
+  };
+  const questions = done.filter((e) => e.kind === "open_question");
+  const qShown = questions.filter((e) => e.shown).sort((a, b) => b.score - a.score);
+  if (questions.length) cards.push(card("__questions", "Open questions", "unresolved; shared in their own section", qShown, questions.filter((e) => !e.shown)));
+  const topicCards = topics.map((t) => {
+    const es = done.filter((e) => e.topic === t && e.kind !== "open_question");
+    const shown = es.filter((e) => e.shown).sort((a, b) => a.topic_rank - b.topic_rank);
+    const deciders = [...new Set(shown.filter((e) => e.kind === "decision").map((e) => e.master))].sort();
+    const disputed = deciders.length > 1 || shown.some((e) => conflicts.has(e.id));
+    const flag = disputed ? (deciders.length > 1 ? `decisions from ${deciders.join(" and ")}: check that they agree` : "conflicting entries") : "";
+    return { t, html: card(t, esc(t), d.topics?.[t], shown, es.filter((e) => !e.shown), flag), disputed, best: Math.max(0, ...shown.map((e) => e.score)), n: es.length };
+  });
+  topicCards.sort((a, b) => (b.disputed - a.disputed) || (b.best - a.best) || (b.n - a.n));
+  cards.unshift(...topicCards.filter((c) => c.disputed).map((c) => c.html));
+  cards.push(...topicCards.filter((c) => !c.disputed).map((c) => c.html));
+  el.innerHTML = cards.join("") || `<div class="empty">No entries yet.</div>`;
+  const shownN = d.entries.filter((e) => e.shown).length;
+  $("board-meta").textContent = `${shownN} visible · ${handoffIds.size} in handoff · ${topics.length} topics`;
+}
+
+function renderTabs() {
+  const d = S.data;
+  const counts = {
+    checks: d && d.checks ? `${d.checks.results.filter((r) => r.ok).length}/${d.checks.results.length}` : "",
+    wire: S.wire.filter((w) => w.session === S.session).length || "",
+    log: S.logs.length || "",
+  };
+  $("tabs").innerHTML = TABS.map((t) => `<button class="tab ${S.tab === t ? "on" : ""}" data-tab="${t}">${t[0].toUpperCase() + t.slice(1)}${counts[t] ? `<span class="n">${counts[t]}</span>` : ""}</button>`).join("");
+}
+
+function renderInspector() {
+  const el = $("inspector");
+  const top = el.scrollTop;
+  el.innerHTML = ({ entry: inspectEntry, handoff: inspectHandoff, checks: inspectChecks, wire: inspectWire, log: inspectLog })[S.tab]();
+  el.scrollTop = top;
+}
+
+function bars(probs, chosen, { order, label } = {}) {
+  if (!probs) return "";
+  let keys = order || Object.keys(probs).sort((a, b) => probs[b] - probs[a]);
+  return `<div class="bars">${keys.map((k) => {
+    const p = probs[k] ?? 0, on = k === chosen;
+    return `<div class="lab ${on ? "on" : ""}" title="${esc(label ? label(k, true) : k)}">${esc(label ? label(k) : k)}</div><div class="bar ${on ? "on" : ""}"><i style="width:${p * 100}%"></i></div><div class="pct">${pct(p)}</div>`;
+  }).join("")}</div>`;
+}
+
+function explain(e) {
+  const T = S.config.thresholds;
+  const t = e.trace || {};
+  const r = t.relate, o = t.outcome || {};
+  if (e.status === "pending") return null;
+  if (!r) {
+    if (!e.shown && e.status === "active") return { cls: "", text: "Not compared with existing entries: hidden entries are never related." };
+    return { cls: "", text: "Nothing to compare with yet: no visible entries on this topic, open questions or earlier entries from this master." };
+  }
+  const a = r.answers || {};
+  const choice = a.relation?.choice, p = a.relation?.probabilities?.[choice] ?? 0;
+  const target = a.target?.choice;
+  const tid = target && target !== "none" ? Number(target.slice(1)) : null;
+  const cand = tid != null ? r.candidates?.[String(tid)] : null;
+  const ref = tid != null ? `<a data-id="${tid}">#${tid}</a>` : "";
+  if (o.close) return { cls: "ok", text: `${o.close[0] === "resolved" ? "Answers" : "Replaces"} ${ref} (p ${fmt(p, 2)} ≥ ${T.close_min_prob}): #${o.close[1]} is now <b>${o.close[0]}</b>.` };
+  if (o.status === "duplicate") return { cls: "ok", text: `Restates ${ref} (p ${fmt(p, 2)} ≥ ${T.close_min_prob}): hidden as a duplicate.` };
+  if (o.relation === "contradicts") return { cls: "bad", text: `${choice === "replaces" ? "Replaces" : "Contradicts"} ${ref}, which another master wrote: one master cannot retract another's entry, so both stay visible, marked as a <b>conflict</b>.` };
+  if (choice === "new") return { cls: "", text: `The model judged it new information (p ${fmt(p, 2)}).` };
+  if (p < T.relation_min_prob) return { cls: "warn", text: `Model leaned “${choice}” ${ref} but only at p ${fmt(p, 2)} < ${T.relation_min_prob}: treated as new.` };
+  if (tid == null) return { cls: "warn", text: `Model said “${choice}” but picked no target: treated as new.` };
+  if (!cand) return { cls: "warn", text: `Target ${ref} was not among the candidates: treated as new.` };
+  if (p < T.close_min_prob) return { cls: "warn", text: `“${choice}” ${ref} at p ${fmt(p, 2)} is below ${T.close_min_prob}, the bar for hiding or closing an entry: kept visible as new.` };
+  if (choice === "replaces") return { cls: "warn", text: `Would replace ${ref}, but that is a ${KIND_LABEL[cand.kind]} and this is a ${KIND_LABEL[e.kind]}: different kinds never close each other. Kept as new.` };
+  if (choice === "answers") return { cls: "warn", text: `Would answer ${ref}, but that is not an open question: kept as new.` };
+  if (choice === "restates") return { cls: "warn", text: `Restates ${ref}, but adopting a ${KIND_LABEL[cand.kind]} as a decision is a commitment: kept.` };
+  return { cls: "", text: `Outcome: ${o.relation}.` };
+}
+
+function inspectEntry() {
+  const d = S.data;
+  const e = d && d.entries.find((x) => x.id === S.selected);
+  if (!e) return `<div class="empty">Select an entry in the timeline or the board to see what the models were asked, what they answered and what the pipeline did with it.</div>`;
+  const ev = d.events.find((x) => x.id === e.event_id) || {};
+  const T = S.config.thresholds, t = e.trace || {}, c = t.classify || {}, a = c.answers || {};
+  const s = entryState(e, new Set(d.handoff.entry_ids || []));
+  const levels = S.config.relevance_levels;
+  const out = [];
+  out.push(`<div class="sec"><div class="tags" style="margin-bottom:6px">${kindChip(e.kind)}<span class="topic">${esc(e.topic || "")}</span><span class="muted">#${e.id} · ${esc(e.master)} · seq ${e.seq} · part ${e.part}</span><span class="state ${s.cls}">${esc(s.label)}</span></div><div class="fulltext">${esc(e.text)}</div></div>`);
+  if (e.status === "pending") { out.push(`<div class="empty shimmer">Waiting for the classifier…</div>`); return out.join(""); }
+
+  if (c.declared) out.push(`<div class="verdict ok" style="margin:0 0 14px">Declared by ${esc(e.master)} with share_context: the kind${c.declared.topic ? " and topic come" : " comes"} from the master and relevance is fixed at 5.${c.answers ? " The classifier was asked only for what the master left out." : ""}</div>`);
+  out.push(`<div class="sec"><h3>Kind <span class="faint">${c.ms != null ? `classify pass ${c.ms} ms` : ""}</span></h3>`);
+  if (a.kind) out.push(bars(a.kind.probabilities, a.kind.choice, { order: Object.keys(a.kind.probabilities), label: (k, long) => long ? `${KIND_LABEL[k]}: ${S.config.kinds[k] || ""}` : KIND_LABEL[k] || k }));
+  else out.push(`<div class="note">Not asked.</div>`);
+  if (c.kind_rule) out.push(`<div class="note">Rule applied: <b>${esc(c.kind_rule)}</b> → ${KIND_LABEL[e.kind]}${a.kind && a.kind.choice !== e.kind ? ` (model said ${KIND_LABEL[a.kind.choice]})` : ""}.</div>`);
+  if (c.raw) out.push(`<div class="note mono">${esc(c.raw)}</div>`);
+  out.push(`</div>`);
+
+  if (a.relevance) {
+    const order = Object.keys(a.relevance.probabilities);
+    out.push(`<div class="sec"><h3>Relevance <span class="faint">expected ${fmt(e.score, 2)} of 5 · confidence ${fmt(e.confidence, 2)}</span></h3>`);
+    out.push(bars(a.relevance.probabilities, String(Math.round(e.score - 1)), { order, label: (k, long) => long ? `${Number(k) + 1}: ${levels[k]}` : `${Number(k) + 1} ${levels[k].split(/[:,]/)[0]}` }));
+    const min = e.kind === "open_question" ? T.visible_question_score : T.visible_score;
+    out.push(`<div class="note">${e.kind === "hypothesis" ? "Hypotheses are never shown." : `Shown when ≥ ${min}${e.kind === "open_question" ? " (open questions)" : ""}: ${e.score >= min ? "passes" : "<b>below the cut</b>"}.`}</div></div>`);
+  }
+  if (a.topic) {
+    out.push(`<div class="sec"><h3>Topic <span class="faint">→ ${esc(e.topic)}</span></h3>`);
+    out.push(bars(a.topic.probabilities, a.topic.choice));
+    const pNew = a.topic.probabilities["(new)"];
+    if (c.named) out.push(`<div class="note">No declared topic fit (p(new) ${fmt(pNew, 2)} ≥ ${T.new_topic_min_prob}); named “${esc(c.named.topic)}” by ${esc(S.config.namer)} in ${c.named.ms} ms.</div>`);
+    else if (a.topic.choice === "(new)") out.push(`<div class="note">Model chose (new) at ${fmt(pNew, 2)}; ${pNew < T.new_topic_min_prob ? `below ${T.new_topic_min_prob}` : "hidden entries never create topics"}, so the best existing topic was used.</div>`);
+    out.push(`</div>`);
+  }
+
+  const r = t.relate;
+  out.push(`<div class="sec"><h3>Relation <span class="faint">${r && r.ms != null ? `relate pass ${r.ms} ms` : ""}</span></h3>`);
+  if (r) {
+    const ra = r.answers || {};
+    out.push(bars(ra.relation?.probabilities, ra.relation?.choice, { order: Object.keys(ra.relation?.probabilities || {}), label: (k, long) => long ? `${k}: ${S.config.relations[k] || ""}` : k }));
+    const existing = r.state?.["existing entries"] || {};
+    const tp = ra.target?.probabilities || {};
+    out.push(`<div class="note" style="margin:10px 0 2px">Compared with ${Object.keys(existing).length} entries (target probability):</div>`);
+    for (const [ref, text] of Object.entries(existing).sort((x, y) => (tp[y[0]] ?? 0) - (tp[x[0]] ?? 0))) {
+      out.push(`<div class="cand ${ref === ra.target?.choice ? "on" : ""}"><a data-id="${ref.slice(1)}">${esc(ref)}</a><div class="ct">${esc(text)}</div><div class="pct" style="text-align:right">${pct(tp[ref])}</div></div>`);
+    }
+    if (tp.none != null) out.push(`<div class="cand ${ra.target?.choice === "none" ? "on" : ""}"><span class="faint">none</span><div class="ct faint">none of them</div><div class="pct" style="text-align:right">${pct(tp.none)}</div></div>`);
+  }
+  const v = explain(e);
+  if (v) out.push(`<div class="verdict ${v.cls}">${v.text}</div>`);
+  out.push(`</div>`);
+
+  const refs = d.entries.filter((x) => x.related_id === e.id || x.closed_by === e.id);
+  const life = [];
+  if (e.closed_by) life.push(`${e.status} by <a data-id="${e.closed_by}">#${e.closed_by}</a>`);
+  for (const x of refs) if (x.id !== e.closed_by) life.push(`<a data-id="${x.id}">#${x.id}</a> (${esc(x.master)}) ${esc(x.relation)} this`);
+  out.push(`<div class="sec"><h3>Lifecycle</h3><dl class="kv"><dt>status</dt><dd>${esc(e.status)}${e.shown ? ", visible" : ""}${e.topic_rank ? `, rank ${e.topic_rank} in its topic` : ""}</dd>
+    ${life.length ? `<dt>links</dt><dd>${life.join("<br>")}</dd>` : ""}
+    <dt>item</dt><dd>stream seq ${ev.stream_seq} · ${esc((ev.item || {}).type)} · received → processed ${ms(ev.received_at, ev.classified_at) ?? "…"} ms</dd></dl></div>`);
+  return out.join("");
+}
+
+function inspectHandoff() {
+  const d = S.data;
+  if (!d) return `<div class="empty">No session.</div>`;
+  const h = d.handoff;
+  const masters = [...new Set(d.events.map((e) => e.master))];
+  const text = h.input.length ? h.input[0].content[0].text : "";
+  const html = esc(text)
+    .replace(/^(## .*)$/gm, '<span class="h">$1</span>')
+    .replace(/(Agents may disagree on: .*?Resolve these first\.)/g, '<span class="warn">$1</span>')
+    .replace(/(check that they agree\))/g, '<span class="warn">$1</span>')
+    .replace(/#(\d+)/g, '<a data-id="$1">#$1</a>');
+  return `<div class="summary"><label class="muted">as seen by a master that is not
+      <select id="exclude"><option value="">(show everyone)</option>${masters.map((m) => `<option ${m === S.exclude ? "selected" : ""}>${esc(m)}</option>`).join("")}</select></label></div>
+    <div class="note" style="margin:-2px 0 8px">${h.items} entries · ${text.length.toLocaleString()} chars · up to stream seq ${h.upto_seq}${h.pending ? ` · <b>${h.pending} items still processing</b>` : ""} · <span class="mono">GET /v1/sessions/${esc(d.session)}/handoff</span></div>
+    ${text ? `<pre class="handoff">${html}</pre>` : `<div class="empty">Empty: nothing visible yet.</div>`}`;
+}
+
+function inspectChecks() {
+  const d = S.data;
+  if (!d || !d.checks) return `<div class="empty">This session was not played from a scenario, so there are no checks. Start one with <b>Run test</b>.</div>`;
+  const c = d.checks, ok = c.results.filter((r) => r.ok).length;
+  const running = d.handoff.pending > 0 || (S.system.run && S.system.run.session === d.session && S.system.run.status === "running");
+  return `<div class="summary"><span class="big-score" style="color:${ok === c.results.length ? "var(--ok)" : "var(--warn)"}">${ok}/${c.results.length}</span>
+      <span class="muted">checks on the current handoff · scenario <b>${esc(c.scenario)}</b>${running ? " · <span style='color:var(--accent)'>run in progress, results are provisional</span>" : ""}</span></div>
+    ${c.results.map((r) => `<div class="check"><span class="${r.ok ? "ok" : "no"}">${r.ok ? "✓" : "✗"}</span><div><b class="mono">${esc(r.id)}</b> <span class="muted">${esc(r.expect)} · ${esc(r.detail)}</span><div>${esc(r.why)}</div><div class="faint mono" style="font-size:11px">${esc(r.pattern)}</div></div></div>`).join("")}`;
+}
+
+function inspectWire() {
+  const items = S.wire.filter((w) => w.session === S.session).slice().reverse();
+  const other = S.wire.length - items.length;
+  return `<div class="note" style="margin-bottom:8px">Items as the taps publish them on NATS (subject <span class="mono">wetink.&lt;session&gt;.items</span>), live since this page opened${other ? `; ${other} from other sessions not shown` : ""}.</div>
+    ${items.map((w) => `<div class="wire"><span class="mdot" style="--m:${masterColor(w.master)}"></span> <b>${esc(w.master)}</b> <span class="muted">seq ${w.seq} · ${esc(w.type)}${w.rev ? ` · snapshot ${w.rev}` : ""} · ${w.bytes} B · ${new Date(w.time * 1000).toLocaleTimeString()}</span><div class="faint mono" style="font-size:11px">${esc(w.msg_id)}</div><div class="p">${esc(w.preview)}</div></div>`).join("") || `<div class="empty">Nothing published for this session since the page opened.</div>`}`;
+}
+
+function inspectLog() {
+  const run = S.system.run;
+  return `${run ? `<div class="note" style="margin-bottom:8px">Run <b>${esc(run.session)}</b> (${esc(run.scenario)}): ${esc(run.status)}</div>` : ""}
+    ${S.logs.length ? `<div class="log">${S.logs.map((l) => esc(l.line)).join("\n")}</div>` : `<div class="empty">Output of runs started from this page appears here.</div>`}`;
+}
+
+// ---------- events ----------
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("[data-tab],[data-toggle],[data-id]");
+  if (!t) return;
+  if (t.dataset.tab) { S.tab = t.dataset.tab; store("tab", S.tab); renderTabs(); renderInspector(); return; }
+  if (t.dataset.toggle) { const k = t.dataset.toggle; S.open.has(k) ? S.open.delete(k) : S.open.add(k); renderBoard(); return; }
+  const id = Number(t.dataset.id);
+  if (!S.data || !S.data.entries.some((e) => e.id === id)) return;
+  S.selected = S.selected === id && !t.matches("a") ? null : id;
+  // Reveal a hidden entry's card section so the selection is visible on the board.
+  const e = S.data.entries.find((x) => x.id === id);
+  if (e && !e.shown) S.open.add(e.kind === "open_question" ? "__questions" : e.topic);
+  S.tab = "entry";
+  render();
+  for (const el of document.querySelectorAll(`[data-id="${id}"].ent, [data-id="${id}"].bent`)) if (!el.contains(t) && el !== t) el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+});
+document.addEventListener("change", (ev) => {
+  if (ev.target.id === "exclude") { S.exclude = ev.target.value; refresh(); }
+});
+$("session").addEventListener("change", (ev) => { S.follow = false; $("follow").checked = false; selectSession(ev.target.value); });
+$("follow").addEventListener("change", (ev) => { S.follow = ev.target.checked; if (S.follow && S.sessions[0]) selectSession(S.sessions[0].session); });
+$("run").addEventListener("click", async () => {
+  $("run").disabled = true;
+  try {
+    S.logs = [];
+    const r = await getJSON("/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scenario: $("scenario").value, pace: Number($("pace").value) }) });
+    store("scenario", $("scenario").value); store("pace", $("pace").value);
+    S.follow = true; $("follow").checked = true;
+    await loadSessions().catch(() => {});
+    selectSession(r.session);
+  } catch (e) { alert(e.message); }
+  finally { $("run").disabled = false; }
+});
+
+let sessionsTimer = null;
+function connect() {
+  const es = new EventSource("/api/stream");
+  es.addEventListener("system", (m) => {
+    S.system = JSON.parse(m.data);
+    renderPills(); renderPipeline();
+    $("run").disabled = !!(S.system.run && S.system.run.status === "running");
+  });
+  es.addEventListener("change", (m) => {
+    const c = JSON.parse(m.data);
+    if (c.session === S.session) {
+      if (c.tables.includes("events")) pulse("consumer");
+      if (c.tables.includes("entries")) pulse("classifier", "context", "handoff");
+      refresh();
+    }
+    clearTimeout(sessionsTimer);
+    sessionsTimer = setTimeout(async () => {
+      const known = S.sessions.some((s) => s.session === c.session);
+      await loadSessions();
+      if (!known && S.follow) selectSession(c.session);
+    }, 400);
+  });
+  es.addEventListener("wire", (m) => {
+    const w = JSON.parse(m.data);
+    S.wire.push(w);
+    if (S.wire.length > 2000) S.wire.splice(0, S.wire.length - 2000);
+    if (w.session === S.session) { pulse("masters", "nats"); renderTabs(); if (S.tab === "wire") renderInspector(); }
+  });
+  es.addEventListener("log", (m) => {
+    S.logs.push(JSON.parse(m.data));
+    renderTabs(); if (S.tab === "log") renderInspector();
+  });
+  es.addEventListener("run", (m) => { S.system.run = JSON.parse(m.data); renderPills(); });
+}
+
+(async function init() {
+  S.config = await getJSON("/api/config");
+  S.tab = TABS.includes(load("tab")) ? load("tab") : "entry";
+  $("scenario").innerHTML = S.config.scenarios.map((s) => `<option value="${esc(s.name)}" title="${esc(s.task)}">${esc(s.name)} (${s.steps} steps)</option>`).join("");
+  if (load("scenario")) $("scenario").value = load("scenario");
+  if (load("pace")) $("pace").value = load("pace");
+  await loadSessions();
+  const fromHash = decodeURIComponent(location.hash.slice(1));
+  if (fromHash) { S.follow = false; $("follow").checked = false; }
+  const first = S.sessions.find((s) => s.session === fromHash) || S.sessions[0];
+  connect();
+  if (first) selectSession(first.session); else render();
+})();
+</script>
+</body>
+</html>

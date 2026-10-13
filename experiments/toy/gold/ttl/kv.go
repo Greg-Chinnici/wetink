@@ -1,0 +1,78 @@
+// Package kv is a small in-memory key-value store, safe for concurrent use.
+package kv
+
+import (
+	"sort"
+	"sync"
+	"time"
+)
+
+// Store maps string keys to string values.
+type Store struct {
+	mu   sync.Mutex
+	data map[string]entry
+}
+
+type entry struct {
+	value   string
+	expires time.Time // zero: never
+}
+
+func (e entry) live(now time.Time) bool { return e.expires.IsZero() || now.Before(e.expires) }
+
+// New returns an empty store.
+func New() *Store {
+	return &Store{data: map[string]entry{}}
+}
+
+// Set stores value under key, replacing any previous value. It never expires.
+func (s *Store) Set(key, value string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.data[key] = entry{value: value}
+}
+
+// SetWithTTL stores value under key until ttl has passed.
+func (s *Store) SetWithTTL(key, value string, ttl time.Duration) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.data[key] = entry{value: value, expires: time.Now().Add(ttl)}
+}
+
+// Get returns the value under key, and whether there is one.
+func (s *Store) Get(key string) (string, bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	e, ok := s.data[key]
+	if !ok || !e.live(time.Now()) {
+		return "", false
+	}
+	return e.value, true
+}
+
+// Delete removes key, if present.
+func (s *Store) Delete(key string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.data, key)
+}
+
+// Len returns the number of keys.
+func (s *Store) Len() int {
+	return len(s.Keys())
+}
+
+// Keys returns the keys in sorted order.
+func (s *Store) Keys() []string {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	now := time.Now()
+	keys := make([]string, 0, len(s.data))
+	for k, e := range s.data {
+		if e.live(now) {
+			keys = append(keys, k)
+		}
+	}
+	sort.Strings(keys)
+	return keys
+}

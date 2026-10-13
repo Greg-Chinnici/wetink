@@ -1,0 +1,1192 @@
+[
+ {
+  "text": "Starting on the content migration.\n\nThere are 214 Markdown pages, and 38 of them use Liquid includes that won't port directly.\n\nI'm leaning towards Hugo, but I haven't compared build times yet.",
+  "segment": [
+   "Starting on the content migration.",
+   "There are 214 Markdown pages, and 38 of them use Liquid includes that won't port directly.",
+   "I'm leaning towards Hugo, but I haven't compared build times yet."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Starting on the content migration.\n\n",
+    "streamed": [
+     "Starting on the content migration."
+    ]
+   },
+   {
+    "prefix": "Starting on the content migration.\n\nThere are 214 Markdown pages, and 38 of them use Liquid includes that won't port directly.\n\n",
+    "streamed": [
+     "Starting on the content migration.",
+     "There are 214 Markdown pages, and 38 of them use Liquid includes that won't port directly."
+    ]
+   }
+  ]
+ },
+ {
+  "text": "I'll handle hosting and CI. Where should the docs be served from, do we keep docs.example.com?",
+  "segment": [
+   "I'll handle hosting and CI. Where should the docs be served from, do we keep docs.example.com?"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "We'll use Hugo: it builds all 214 pages in 1.9 s against 14.2 s for Astro.",
+  "segment": [
+   "We'll use Hugo: it builds all 214 pages in 1.9 s against 14.2 s for Astro."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "docs.example.com stays the domain; it is in every customer's bookmarks.",
+  "segment": [
+   "docs.example.com stays the domain; it is in every customer's bookmarks."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Hosting decision: Cloudflare Pages, deploying on every merge to main.",
+  "segment": [
+   "Hosting decision: Cloudflare Pages, deploying on every merge to main."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "I converted the Liquid includes to Hugo shortcodes; 36 of the 38 pages render identically and 2 still need manual fixes.",
+  "segment": [
+   "I converted the Liquid includes to Hugo shortcodes; 36 of the 38 pages render identically and 2 still need manual fixes."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "The CI pipeline now runs jekyll build and uploads the _site folder to Cloudflare Pages.",
+  "segment": [
+   "The CI pipeline now runs jekyll build and uploads the _site folder to Cloudflare Pages."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "To repeat: we're on Hugo now.",
+  "segment": [
+   "To repeat: we're on Hugo now."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Could the 2 broken pages be the ones with embedded iframes?",
+  "segment": [
+   "Could the 2 broken pages be the ones with embedded iframes?"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Fixed the last 2 pages; all 214 pages now render identically in Hugo.",
+  "segment": [
+   "Fixed the last 2 pages; all 214 pages now render identically in Hugo."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "cool",
+  "segment": [
+   "cool"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Status:\n\n- Preview deploys work for every pull request.\n- Redirects from the old /blog/ URLs are configured in the _redirects file.\n\nDo we need to keep the old RSS feed URL working?",
+  "segment": [
+   "Preview deploys work for every pull request.",
+   "Redirects from the old /blog/ URLs are configured in the _redirects file.",
+   "Do we need to keep the old RSS feed URL working?"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Status:\n\n",
+    "streamed": []
+   },
+   {
+    "prefix": "Status:\n\n- Preview deploys work for every pull request.\n- Redirects from the old /blog/ URLs are configured in the _redirects file.\n\n",
+    "streamed": [
+     "Preview deploys work for every pull request.",
+     "Redirects from the old /blog/ URLs are configured in the _redirects file."
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Hugo config so far:\n\n```toml\nbaseURL = \"https://docs.example.com/\"\ntitle = \"Example Docs\"\n[markup.goldmark.renderer]\n  unsafe = true\n```",
+  "segment": [
+   "Hugo config so far:\n```toml\nbaseURL = \"https://docs.example.com/\"\ntitle = \"Example Docs\"\n[markup.goldmark.renderer]\n  unsafe = true\n```"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Hugo config so far:\n\n",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "I'm taking storage. We'll use SQLite for the MVP: one file and no server to run.",
+  "segment": [
+   "I'm taking storage. We'll use SQLite for the MVP: one file and no server to run."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Open question for whoever owns the API: which status code should redirects use?",
+  "segment": [
+   "Open question for whoever owns the API: which status code should redirects use?"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Starting on the HTTP API. POST /links creates a short link and returns it as JSON.",
+  "segment": [
+   "Starting on the HTTP API. POST /links creates a short link and returns it as JSON."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Picking up ingestion.\n\nThe exports arrive as CSV in an S3 bucket, one file per store per day. I checked last month's files: 312 files, the largest is 48 MB.\n\nI'm not sure yet whether refunds show up as negative rows or in a separate file.",
+  "segment": [
+   "Picking up ingestion.",
+   "The exports arrive as CSV in an S3 bucket, one file per store per day. I checked last month's files: 312 files, the largest is 48 MB.",
+   "I'm not sure yet whether refunds show up as negative rows or in a separate file."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Picking up ingestion.\n\n",
+    "streamed": [
+     "Picking up ingestion."
+    ]
+   },
+   {
+    "prefix": "Picking up ingestion.\n\nThe exports arrive as CSV in an S3 bucket, one file per store per day. I checked last month's files: 312 files, the largest is 48 MB.\n\n",
+    "streamed": [
+     "Picking up ingestion.",
+     "The exports arrive as CSV in an S3 bucket, one file per store per day. I checked last month's files: 312 files, the largest is 48 MB."
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Which timezone should the weekly report use for week boundaries?",
+  "segment": [
+   "Which timezone should the weekly report use for week boundaries?"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Refunds are separate rows with type=REFUND and a positive amount, so the report has to subtract them.",
+  "segment": [
+   "Refunds are separate rows with type=REFUND and a positive amount, so the report has to subtract them."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "We'll load everything into DuckDB, one table per day partition.",
+  "segment": [
+   "We'll load everything into DuckDB, one table per day partition."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Noted: DuckDB with daily partitions, as master-a said.",
+  "segment": [
+   "Noted: DuckDB with daily partitions, as master-a said."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "All timestamps in the exports are UTC. Week boundaries will be Monday 00:00 UTC; that's settled.",
+  "segment": [
+   "All timestamps in the exports are UTC. Week boundaries will be Monday 00:00 UTC; that's settled."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Perhaps we should exclude test stores from the report, their IDs start with T-.",
+  "segment": [
+   "Perhaps we should exclude test stores from the report, their IDs start with T-."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Update: DuckDB can't be written by two processes at once, which breaks the backfill plan. We're switching to Postgres for the warehouse.",
+  "segment": [
+   "Update: DuckDB can't be written by two processes at once, which breaks the backfill plan. We're switching to Postgres for the warehouse."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Sounds good.",
+  "segment": [
+   "Sounds good."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "The report will be generated as a PDF and emailed to finance every Monday at 07:00.",
+  "segment": [
+   "The report will be generated as a PDF and emailed to finance every Monday at 07:00."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "The pipeline runs nightly at 02:00 UTC from a cron job on the ops box.",
+  "segment": [
+   "The pipeline runs nightly at 02:00 UTC from a cron job on the ops box."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "I set the report job to run from Airflow at 06:00 UTC on Mondays, and it triggers the ingestion itself.",
+  "segment": [
+   "I set the report job to run from Airflow at 06:00 UTC on Mondays, and it triggers the ingestion itself."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Data quality so far:\n\n1. 0.4% of rows have an empty store_id; we drop them and log a count.\n2. Duplicate order IDs appear when a store re-exports a day; we keep the latest file.\n\nHow should we treat orders with a negative quantity?",
+  "segment": [
+   "0.4% of rows have an empty store_id; we drop them and log a count.",
+   "Duplicate order IDs appear when a store re-exports a day; we keep the latest file.",
+   "How should we treat orders with a negative quantity?"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Data quality so far:\n\n",
+    "streamed": []
+   },
+   {
+    "prefix": "Data quality so far:\n\n1. 0.4% of rows have an empty store_id; we drop them and log a count.\n2. Duplicate order IDs appear when a store re-exports a day; we keep the latest file.\n\n",
+    "streamed": [
+     "0.4% of rows have an empty store_id; we drop them and log a count.",
+     "Duplicate order IDs appear when a store re-exports a day; we keep the latest file."
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Draft metric definition:\n\n```sql\nSELECT date_trunc('week', ts) AS week,\n       sum(CASE WHEN type = 'REFUND' THEN -amount ELSE amount END) AS net_revenue\nFROM sales\nGROUP BY 1;\n```",
+  "segment": [
+   "Draft metric definition:\n```sql\nSELECT date_trunc('week', ts) AS week,\n       sum(CASE WHEN type = 'REFUND' THEN -amount ELSE amount END) AS net_revenue\nFROM sales\nGROUP BY 1;\n```"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Draft metric definition:\n\n",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Back to work on the loader.",
+  "segment": [
+   "Back to work on the loader."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "I'll take the storage layer and ID generation.\n\nMy first thought is Postgres: we get transactions and a sequence for IDs for free. I haven't benchmarked anything yet, so treat that as a starting point.\n\nOpen question for whoever owns the API: do we need per-link click analytics in the MVP? It changes the schema a lot.",
+  "segment": [
+   "I'll take the storage layer and ID generation.",
+   "My first thought is Postgres: we get transactions and a sequence for IDs for free. I haven't benchmarked anything yet, so treat that as a starting point.",
+   "Open question for whoever owns the API: do we need per-link click analytics in the MVP? It changes the schema a lot."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "I'll take the storage layer and ID generation.\n\n",
+    "streamed": [
+     "I'll take the storage layer and ID generation."
+    ]
+   },
+   {
+    "prefix": "I'll take the storage layer and ID generation.\n\nMy first thought is Postgres: we get transactions and a sequence for IDs for free. I haven't benchmarked anything yet, so treat that as a starting point.\n\n",
+    "streamed": [
+     "I'll take the storage layer and ID generation.",
+     "My first thought is Postgres: we get transactions and a sequence for IDs for free. I haven't benchmarked anything yet, so treat that as a starting point."
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Taking the HTTP API: POST /links to create, GET /{code} to redirect.",
+  "segment": [
+   "Taking the HTTP API: POST /links to create, GET /{code} to redirect."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Decision: we will use Postgres 17 as the datastore, with a bigint identity column as the source of IDs.",
+  "segment": [
+   "Decision: we will use Postgres 17 as the datastore, with a bigint identity column as the source of IDs."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "What format should the short codes have? I need to know the max length to validate the path.",
+  "segment": [
+   "What format should the short codes have? I need to know the max length to validate the path."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Short codes are the bigint ID encoded in base62, left-padded to 7 characters. That's final; max length is 7.",
+  "segment": [
+   "Short codes are the bigint ID encoded in base62, left-padded to 7 characters. That's final; max length is 7."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Got it, I'm using Postgres 17 as the datastore like master-a decided.",
+  "segment": [
+   "Got it, I'm using Postgres 17 as the datastore like master-a decided."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "We will return 302 for redirects, not 301, so links can be edited later.",
+  "segment": [
+   "We will return 302 for redirects, not 301, so links can be edited later."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Change of plan after talking it through: for the MVP we'll use SQLite instead of Postgres. One file, no server to run, and our expected load is small. Postgres stays an option for later.",
+  "segment": [
+   "Change of plan after talking it through: for the MVP we'll use SQLite instead of Postgres. One file, no server to run, and our expected load is small. Postgres stays an option for later."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "I decided to keep the link table in Redis for now, it was quicker to wire up in the API service.",
+  "segment": [
+   "I decided to keep the link table in Redis for now, it was quicker to wire up in the API service."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Maybe hash collisions could become a problem if we ever switch from sequence IDs to random codes.",
+  "segment": [
+   "Maybe hash collisions could become a problem if we ever switch from sequence IDs to random codes."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Okay, continuing with the migrations.",
+  "segment": [
+   "Okay, continuing with the migrations."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Load test on SQLite with WAL enabled: 1,200 creates/s and 9,000 redirects/s, p99 latency 45 ms. That's well above what we need.",
+  "segment": [
+   "Load test on SQLite with WAL enabled: 1,200 creates/s and 9,000 redirects/s, p99 latency 45 ms. That's well above what we need."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Thanks!",
+  "segment": [
+   "Thanks!"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Here is the redirect handler:\n\n```python\n@app.get(\"/{code}\")\nasync def redirect(code: str):\n    if len(code) > 7:\n        raise HTTPException(404)\n    url = await store.resolve(code)\n    if url is None:\n        raise HTTPException(404)\n    return RedirectResponse(url, status_code=302)\n```",
+  "segment": [
+   "Here is the redirect handler:\n```python\n@app.get(\"/{code}\")\nasync def redirect(code: str):\n    if len(code) > 7:\n        raise HTTPException(404)\n    url = await store.resolve(code)\n    if url is None:\n        raise HTTPException(404)\n    return RedirectResponse(url, status_code=302)\n```"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Here is the redirect handler:\n\n",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Progress update:\n\n- POST /links validates URLs and rejects anything that isn't http or https.\n- GET /{code} returns 404 for unknown codes.\n- All 18 API tests pass.\n\nStill unsure whether we need rate limiting on POST /links.",
+  "segment": [
+   "POST /links validates URLs and rejects anything that isn't http or https.",
+   "GET /{code} returns 404 for unknown codes.",
+   "All 18 API tests pass.",
+   "Still unsure whether we need rate limiting on POST /links."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Progress update:\n\n",
+    "streamed": []
+   },
+   {
+    "prefix": "Progress update:\n\n- POST /links validates URLs and rejects anything that isn't http or https.\n- GET /{code} returns 404 for unknown codes.\n- All 18 API tests pass.\n\n",
+    "streamed": [
+     "POST /links validates URLs and rejects anything that isn't http or https.",
+     "GET /{code} returns 404 for unknown codes.",
+     "All 18 API tests pass."
+    ]
+   }
+  ]
+ },
+ {
+  "text": "We decided to use Postgres 17.",
+  "segment": [
+   "We decided to use Postgres 17."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Plan:\n\n- one\n- two\n\nDone?",
+  "segment": [
+   "one",
+   "two",
+   "Done?"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Plan:\n\n",
+    "streamed": []
+   },
+   {
+    "prefix": "Plan:\n\n- one\n- two\n\n",
+    "streamed": [
+     "one",
+     "two"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Intro:\n\n```py\nx = 1\n\ny = 2\n```\n\nAfter the code.",
+  "segment": [
+   "Intro:\n```py\nx = 1\n\ny = 2\n```",
+   "After the code."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Intro:\n\n",
+    "streamed": []
+   },
+   {
+    "prefix": "Intro:\n\n```py\nx = 1\n\ny = 2\n```\n\n",
+    "streamed": [
+     "Intro:\n```py\nx = 1\n\ny = 2\n```"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "A\n\nLead in:\n\nNot a list after all.\n\nEnd.",
+  "segment": [
+   "A",
+   "Lead in:",
+   "Not a list after all.",
+   "End."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "A\n\n",
+    "streamed": [
+     "A"
+    ]
+   },
+   {
+    "prefix": "A\n\nLead in:\n\n",
+    "streamed": [
+     "A"
+    ]
+   },
+   {
+    "prefix": "A\n\nLead in:\n\nNot a list after all.\n\n",
+    "streamed": [
+     "A",
+     "Lead in:",
+     "Not a list after all."
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\nParagraph 11.\n\nParagraph 12.\n\nParagraph 13.\n\nParagraph 14.\n\nParagraph 15.\n\nParagraph 16.\n\nParagraph 17.\n\nParagraph 18.\n\nParagraph 19.",
+  "segment": [
+   "Paragraph 0.",
+   "Paragraph 1.",
+   "Paragraph 2.",
+   "Paragraph 3.",
+   "Paragraph 4.",
+   "Paragraph 5.",
+   "Paragraph 6.",
+   "Paragraph 7.",
+   "Paragraph 8.",
+   "Paragraph 9.",
+   "Paragraph 10.",
+   "Paragraph 11.\n\nParagraph 12.\n\nParagraph 13.\n\nParagraph 14.\n\nParagraph 15.\n\nParagraph 16.\n\nParagraph 17.\n\nParagraph 18.\n\nParagraph 19."
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Paragraph 0.\n\n",
+    "streamed": [
+     "Paragraph 0."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9.",
+     "Paragraph 10."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\nParagraph 11.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9.",
+     "Paragraph 10."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\nParagraph 11.\n\nParagraph 12.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9.",
+     "Paragraph 10."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\nParagraph 11.\n\nParagraph 12.\n\nParagraph 13.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9.",
+     "Paragraph 10."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\nParagraph 11.\n\nParagraph 12.\n\nParagraph 13.\n\nParagraph 14.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9.",
+     "Paragraph 10."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\nParagraph 11.\n\nParagraph 12.\n\nParagraph 13.\n\nParagraph 14.\n\nParagraph 15.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9.",
+     "Paragraph 10."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\nParagraph 11.\n\nParagraph 12.\n\nParagraph 13.\n\nParagraph 14.\n\nParagraph 15.\n\nParagraph 16.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9.",
+     "Paragraph 10."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\nParagraph 11.\n\nParagraph 12.\n\nParagraph 13.\n\nParagraph 14.\n\nParagraph 15.\n\nParagraph 16.\n\nParagraph 17.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9.",
+     "Paragraph 10."
+    ]
+   },
+   {
+    "prefix": "Paragraph 0.\n\nParagraph 1.\n\nParagraph 2.\n\nParagraph 3.\n\nParagraph 4.\n\nParagraph 5.\n\nParagraph 6.\n\nParagraph 7.\n\nParagraph 8.\n\nParagraph 9.\n\nParagraph 10.\n\nParagraph 11.\n\nParagraph 12.\n\nParagraph 13.\n\nParagraph 14.\n\nParagraph 15.\n\nParagraph 16.\n\nParagraph 17.\n\nParagraph 18.\n\n",
+    "streamed": [
+     "Paragraph 0.",
+     "Paragraph 1.",
+     "Paragraph 2.",
+     "Paragraph 3.",
+     "Paragraph 4.",
+     "Paragraph 5.",
+     "Paragraph 6.",
+     "Paragraph 7.",
+     "Paragraph 8.",
+     "Paragraph 9.",
+     "Paragraph 10."
+    ]
+   }
+  ]
+ },
+ {
+  "text": "- a\n  continued\n\n- b\n\n1. c\n\nTail:",
+  "segment": [
+   "a\ncontinued",
+   "b",
+   "c",
+   "Tail:"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "- a\n  continued\n\n",
+    "streamed": [
+     "a\ncontinued"
+    ]
+   },
+   {
+    "prefix": "- a\n  continued\n\n- b\n\n",
+    "streamed": [
+     "a\ncontinued",
+     "b"
+    ]
+   },
+   {
+    "prefix": "- a\n  continued\n\n- b\n\n1. c\n\n",
+    "streamed": [
+     "a\ncontinued",
+     "b",
+     "c"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Steps:\n1) first\n2) second\n* star\n• bullet",
+  "segment": [
+   "first",
+   "second",
+   "star",
+   "bullet"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "  indented para\n  second line\n\n\n\nafter many blanks  ",
+  "segment": [
+   "indented para\n  second line",
+   "after many blanks"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "  indented para\n  second line\n\n",
+    "streamed": [
+     "indented para\n  second line"
+    ]
+   },
+   {
+    "prefix": "  indented para\n  second line\n\n\n",
+    "streamed": [
+     "indented para\n  second line"
+    ]
+   },
+   {
+    "prefix": "  indented para\n  second line\n\n\n\n",
+    "streamed": [
+     "indented para\n  second line"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "Unicode: café naïve — “quotes” …\n\n- élan\n\nFin?",
+  "segment": [
+   "Unicode: café naïve — “quotes” …",
+   "élan",
+   "Fin?"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Unicode: café naïve — “quotes” …\n\n",
+    "streamed": [
+     "Unicode: café naïve — “quotes” …"
+    ]
+   },
+   {
+    "prefix": "Unicode: café naïve — “quotes” …\n\n- élan\n\n",
+    "streamed": [
+     "Unicode: café naïve — “quotes” …",
+     "élan"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "```\nunclosed fence\n\nstill code",
+  "segment": [
+   "```\nunclosed fence\n\nstill code"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Here is the code:\n```js\nlet a = 1;\n```\nand a trailing line",
+  "segment": [
+   "Here is the code:\n```js\nlet a = 1;\n```",
+   "and a trailing line"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "Windows\r\nline\r\n\r\nendings",
+  "segment": [
+   "Windows\nline",
+   "endings"
+  ],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   },
+   {
+    "prefix": "Windows\r\nline\r\n\r\n",
+    "streamed": [
+     "Windows\nline"
+    ]
+   }
+  ]
+ },
+ {
+  "text": "",
+  "segment": [],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ },
+ {
+  "text": "   ",
+  "segment": [],
+  "prefixes": [
+   {
+    "prefix": "",
+    "streamed": []
+   }
+  ]
+ }
+]

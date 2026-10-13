@@ -1,0 +1,606 @@
+[
+ {
+  "scenario": "docs-migration",
+  "text": "Shared context from the other agents working on this task (session docs-migration, up to stream sequence 15).\nThe task: Move the company docs site off Jekyll. master-a migrates the content and picks the generator, master-b owns hosting and CI.\n\nEach entry names the agent that reported it. Treat entries as that agent's results and decisions, not your own conclusions, and check anything critical before relying on it. Declared entries were shared deliberately by their agent; the others were picked out of its work. Entries marked as conflicting disagree and are unresolved.\n\n## ci\n- [fact from master-b, seq 4, #10] The CI pipeline now runs jekyll build and uploads the _site folder to Cloudflare Pages.\n- [fact from master-b, seq 7, #15] Preview deploys work for every pull request.\n- [fact from master-a, seq 3, #5] Tool call run({\"cmd\": \"time hugo build && time astro build\"}) returned:\n  hugo: 214 pages in 1.9 s\n  astro: 214 pages in 14.2 s\n\n## urls\n- [fact from master-b, seq 7, #16] Redirects from the old /blog/ URLs are configured in the _redirects file.\n- [fact from master-b, seq 2, #7] docs.example.com stays the domain; it is in every customer's bookmarks.\n\n## generator\n- [decision from master-a, seq 4, #6] We'll use Hugo: it builds all 214 pages in 1.9 s against 14.2 s for Astro.\n- [fact from master-a, seq 7, #13] Fixed the last 2 pages; all 214 pages now render identically in Hugo.\n- [artifact from master-a, seq 8, #18] Hugo config so far:\n  ```toml\n  baseURL = \"https://docs.example.com/\"\n  title = \"Example Docs\"\n  [markup.goldmark.renderer]\n    unsafe = true\n  ```\n\n## hosting\n- [decision from master-b, seq 3, #8] Hosting decision: Cloudflare Pages, deploying on every merge to main.\n\n## content\n- [fact from master-a, seq 1, #2] There are 214 Markdown pages, and 38 of them use Liquid includes that won't port directly.\n\n## Open questions\nUnresolved; answer them if you can, and do not treat them as settled.\n- [open question from master-b, seq 7, #17, topic urls] Do we need to keep the old RSS feed URL working?",
+  "results": [
+   {
+    "check": {
+     "id": "page-count",
+     "expect": "include",
+     "pattern": "38 of them use Liquid",
+     "why": "fact inside a multi-part message"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "leaning-hugo",
+     "expect": "exclude_as_fact",
+     "pattern": "leaning towards Hugo",
+     "why": "tentative, later decided"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "generator",
+     "expect": "include",
+     "pattern": "We'll use Hugo",
+     "why": "generator decision"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "domain-answer",
+     "expect": "include",
+     "pattern": "docs.example.com stays",
+     "why": "decision"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "domain-question",
+     "expect": "exclude",
+     "pattern": "Where should the docs be served from",
+     "why": "answered by its own author"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "hosting",
+     "expect": "include",
+     "pattern": "Cloudflare Pages, deploying on every merge",
+     "why": "hosting decision"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "ci-jekyll",
+     "expect": "include",
+     "pattern": "runs jekyll build",
+     "why": "one side of the generator disagreement"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "ci-flagged",
+     "expect": "include",
+     "pattern": "conflicts with #|decisions from master-a and master-b; check that they agree",
+     "why": "jekyll build in CI vs the Hugo decision is flagged"
+    },
+    "ok": false,
+    "detail": "missing"
+   },
+   {
+    "check": {
+     "id": "restated",
+     "expect": "exclude",
+     "pattern": "To repeat: we're on Hugo",
+     "why": "restates master-a's own decision"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "old-progress",
+     "expect": "exclude",
+     "pattern": "36 of the 38 pages",
+     "why": "superseded by master-a's later progress fact"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "new-progress",
+     "expect": "include",
+     "pattern": "all 214 pages now render",
+     "why": "current state"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "iframes",
+     "expect": "exclude_as_fact",
+     "pattern": "embedded iframes",
+     "why": "a guess"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "noise",
+     "expect": "exclude",
+     "pattern": "(?m)\\] cool$",
+     "why": "noise"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "previews",
+     "expect": "include",
+     "pattern": "Preview deploys work",
+     "why": "fact in a list"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "redirects",
+     "expect": "include",
+     "pattern": "_redirects file",
+     "why": "fact in a list"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "rss-question",
+     "expect": "include",
+     "pattern": "RSS feed",
+     "why": "open question after a list"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "config",
+     "expect": "include",
+     "pattern": "baseURL",
+     "why": "artifact"
+    },
+    "ok": true,
+    "detail": "present"
+   }
+  ]
+ },
+ {
+  "scenario": "pull-and-share",
+  "text": "Shared context from the other agents working on this task (session pull-and-share, up to stream sequence 717).\nThe task: Build a URL shortener HTTP API. master-a owns storage and IDs, master-b joins later and owns the HTTP API.\n\nEach entry names the agent that reported it. Treat entries as that agent's results and decisions, not your own conclusions, and check anything critical before relying on it. Declared entries were shared deliberately by their agent; the others were picked out of its work. Entries marked as conflicting disagree and are unresolved.\n\n## http_api\n- [decision from master-b, declared, #698] Redirects return 302, not 301, so links can be edited later.\n- [fact from master-b, seq 1, #697] Starting on the HTTP API. POST /links creates a short link and returns it as JSON.\n\n## ids\n- [decision from master-b, declared, #700] Change of plan: short codes are 8 characters of base62, to leave room for growth.\n\n## sqlite\n- [decision from master-a, seq 1, #695] I'm taking storage. We'll use SQLite for the MVP: one file and no server to run.",
+  "results": [
+   {
+    "check": {
+     "id": "declared",
+     "expect": "include",
+     "pattern": "from master-b, declared, #\\d+\\] Redirects return 302",
+     "why": "a share becomes a declared entry"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "question-answered",
+     "expect": "exclude",
+     "pattern": "which status code should redirects use",
+     "why": "the declared 302 decision answers master-a's question"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "share-revised",
+     "expect": "exclude",
+     "pattern": "7 characters of base62",
+     "why": "master-b's revised share supersedes its earlier one"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "share-current",
+     "expect": "include",
+     "pattern": "8 characters of base62",
+     "why": "the revision is current"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "no-echo",
+     "expect": "exclude",
+     "pattern": "from master-b[^\\]]*\\] [^\\n]*SQLite",
+     "why": "pulled context never comes back as the puller's entry"
+    },
+    "ok": true,
+    "detail": "absent"
+   }
+  ]
+ },
+ {
+  "scenario": "sales-pipeline",
+  "text": "Shared context from the other agents working on this task (session sales-pipeline, up to stream sequence 32).\nThe task: Build a nightly pipeline that loads sales exports and produces a weekly revenue report. master-a owns ingestion, master-b owns the report.\n\nEach entry names the agent that reported it. Treat entries as that agent's results and decisions, not your own conclusions, and check anything critical before relying on it. Declared entries were shared deliberately by their agent; the others were picked out of its work. Entries marked as conflicting disagree and are unresolved.\n\n## ingestion\n- [decision from master-a, seq 7, #29] Update: DuckDB can't be written by two processes at once, which breaks the backfill plan. We're switching to Postgres for the warehouse.\n- [fact from master-a, seq 1, #20] The exports arrive as CSV in an S3 bucket, one file per store per day. I checked last month's files: 312 files, the largest is 48 MB.\n\n## report\n- [artifact from master-b, seq 7, #37] Draft metric definition:\n  ```sql\n  SELECT date_trunc('week', ts) AS week,\n         sum(CASE WHEN type = 'REFUND' THEN -amount ELSE amount END) AS net_revenue\n  FROM sales\n  GROUP BY 1;\n  ```\n- [fact from master-b, seq 5, #31] The report will be generated as a PDF and emailed to finance every Monday at 07:00.\n\n## scheduling\n- [fact from master-a, seq 8, #32] The pipeline runs nightly at 02:00 UTC from a cron job on the ops box.\n\n## data\n- [fact from master-a, seq 6, #27] All timestamps in the exports are UTC. Week boundaries will be Monday 00:00 UTC; that's settled.\n- [fact from master-a, seq 4, #24] Refunds are separate rows with type=REFUND and a positive amount, so the report has to subtract them.\n- [fact from master-a, seq 3, #23] Tool call read_file({\"path\": \"exports/README.txt\"}) returned:\n  Refunds are exported as separate rows with type=REFUND and a positive amount.\n\n## data_quality\n- [decision from master-a, seq 9, #34] 0.4% of rows have an empty store_id; we drop them and log a count.\n- [fact from master-a, seq 9, #35] Duplicate order IDs appear when a store re-exports a day; we keep the latest file.\n\n## Open questions\nUnresolved; answer them if you can, and do not treat them as settled.\n- [open question from master-a, seq 9, #36, topic data] How should we treat orders with a negative quantity?\n- [open question from master-a, seq 1, #21, topic ingestion] I'm not sure yet whether refunds show up as negative rows or in a separate file.",
+  "results": [
+   {
+    "check": {
+     "id": "file-facts",
+     "expect": "include",
+     "pattern": "312 files",
+     "why": "verified fact inside a multi-part message"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "refund-uncertainty",
+     "expect": "exclude_as_fact",
+     "pattern": "not sure yet whether refunds",
+     "why": "uncertainty, later answered"
+    },
+    "ok": true,
+    "detail": "shown as open question"
+   },
+   {
+    "check": {
+     "id": "refunds",
+     "expect": "include",
+     "pattern": "type=REFUND",
+     "why": "verified fact the report depends on"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "warehouse-current",
+     "expect": "include",
+     "pattern": "switching to Postgres",
+     "why": "master-a's latest warehouse decision"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "warehouse-superseded",
+     "expect": "exclude",
+     "pattern": "load everything into DuckDB",
+     "why": "superseded by master-a's switch to Postgres"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "echo",
+     "expect": "exclude",
+     "pattern": "as master-a said",
+     "why": "restatement"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "timezone-answer",
+     "expect": "include",
+     "pattern": "Monday 00:00 UTC",
+     "why": "decision answering master-b's question"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "timezone-question",
+     "expect": "exclude",
+     "pattern": "Which timezone should the weekly report use",
+     "why": "answered"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "test-stores",
+     "expect": "exclude_as_fact",
+     "pattern": "test stores",
+     "why": "a suggestion, not a decision"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "noise-sounds-good",
+     "expect": "exclude",
+     "pattern": "Sounds good",
+     "why": "noise"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "noise-back",
+     "expect": "exclude",
+     "pattern": "Back to work",
+     "why": "noise"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "report-delivery",
+     "expect": "include",
+     "pattern": "emailed to finance",
+     "why": "report decision"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "schedule-a",
+     "expect": "include",
+     "pattern": "02:00 UTC from a cron job",
+     "why": "one side of the scheduling disagreement"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "schedule-b",
+     "expect": "include",
+     "pattern": "Airflow",
+     "why": "other side of the scheduling disagreement"
+    },
+    "ok": false,
+    "detail": "missing"
+   },
+   {
+    "check": {
+     "id": "schedule-flagged",
+     "expect": "include",
+     "pattern": "conflicts with #|scheduling \\(decisions from master-a and master-b; check that they agree\\)",
+     "why": "cron vs Airflow ownership of the run is flagged"
+    },
+    "ok": false,
+    "detail": "missing"
+   },
+   {
+    "check": {
+     "id": "dq-empty-store",
+     "expect": "include",
+     "pattern": "empty store_id",
+     "why": "fact in a numbered list"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "dq-duplicates",
+     "expect": "include",
+     "pattern": "keep the latest file",
+     "why": "decision in a numbered list"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "dq-question",
+     "expect": "include",
+     "pattern": "negative quantity",
+     "why": "open question after a list"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "metric-sql",
+     "expect": "include",
+     "pattern": "net_revenue",
+     "why": "artifact"
+    },
+    "ok": true,
+    "detail": "present"
+   }
+  ]
+ },
+ {
+  "scenario": "url-shortener",
+  "text": "Shared context from the other agents working on this task (session url-shortener, up to stream sequence 699).\nThe task: Build a URL shortener HTTP API. master-a owns storage and IDs, master-b owns the HTTP API.\n\nEach entry names the agent that reported it. Treat entries as that agent's results and decisions, not your own conclusions, and check anything critical before relying on it. Declared entries were shared deliberately by their agent; the others were picked out of its work. Entries marked as conflicting disagree and are unresolved.\n\nAgents may disagree on: storage (master-a, master-b). Resolve these first.\n\n## storage (decisions from master-a and master-b; check that they agree)\n- [decision from master-a, seq 6, #681] Change of plan after talking it through: for the MVP we'll use SQLite instead of Postgres. One file, no server to run, and our expected load is small. Postgres stays an option for later.\n- [decision from master-b, seq 7, #682] I decided to keep the link table in Redis for now, it was quicker to wire up in the API service.\n\n## http_api\n- [fact from master-b, seq 10, #690] All 18 API tests pass.\n- [fact from master-b, seq 5, #679] Tool call lookup({\"query\": \"which HTTP status for a URL shortener redirect\"}) returned:\n  Use 302 Found for links that may change; 301 is cached permanently by browsers.\n- [fact from master-b, seq 10, #688] POST /links validates URLs and rejects anything that isn't http or https.\n- [decision from master-b, seq 6, #680] We will return 302 for redirects, not 301, so links can be edited later.\n- [artifact from master-b, seq 9, #687] Here is the redirect handler:\n  ```python\n  @app.get(\"/{code}\")\n  async def redirect(code: str):\n      if len(code) > 7:\n          raise HTTPException(404)\n      url = await store.resolve(code)\n      if url is None:\n          raise HTTPException(404)\n      return RedirectResponse(url, status_code=302)\n  ```\n- [fact from master-b, seq 1, #674] Taking the HTTP API: POST /links to create, GET /{code} to redirect.\n- [fact from master-b, seq 10, #689] GET /{code} returns 404 for unknown codes.\n\n## ids\n- [decision from master-a, seq 1, #668] I'll take the storage layer and ID generation.\n- [fact from master-a, seq 5, #677] Short codes are the bigint ID encoded in base62, left-padded to 7 characters. That's final; max length is 7.\n\n## testing\n- [fact from master-a, seq 9, #685] Load test on SQLite with WAL enabled: 1,200 creates/s and 9,000 redirects/s, p99 latency 45 ms. That's well above what we need.\n\n## Open questions\nUnresolved; answer them if you can, and do not treat them as settled.\n- [open question from master-a, seq 3, #673, topic analytics] Open question for whoever owns the API: do we need per-link click analytics in the MVP? It changes the schema a lot.\n- [open question from master-b, seq 11, #694, topic rate_limiting] Still unsure whether we need rate limiting on POST /links.",
+  "results": [
+   {
+    "check": {
+     "id": "storage-current",
+     "expect": "include",
+     "pattern": "SQLite instead of Postgres",
+     "why": "master-a's latest storage decision"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "storage-superseded",
+     "expect": "exclude",
+     "pattern": "will use Postgres 17 as the datastore",
+     "why": "superseded by master-a's own later decision"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "echo",
+     "expect": "exclude",
+     "pattern": "like master-a decided",
+     "why": "master-b restating master-a, not new information"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "code-format",
+     "expect": "include",
+     "pattern": "base62",
+     "why": "decision other masters need"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "redirect-status",
+     "expect": "include",
+     "pattern": "302",
+     "why": "API decision"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "load-test",
+     "expect": "include",
+     "pattern": "1,200 creates/s",
+     "why": "verified result"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "api-tests",
+     "expect": "include",
+     "pattern": "18 API tests pass",
+     "why": "fact inside a multi-part message"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "url-validation",
+     "expect": "include",
+     "pattern": "rejects anything that isn't http",
+     "why": "fact inside a multi-part message"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "conflict-visible",
+     "expect": "include",
+     "pattern": "Redis",
+     "why": "master-b's storage choice conflicts with master-a's and must be visible"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "conflict-flagged",
+     "expect": "include",
+     "pattern": "conflicts with #|storage \\(decisions from master-a and master-b; check that they agree\\)",
+     "why": "the storage disagreement is flagged, not silently resolved"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "open-analytics",
+     "expect": "include",
+     "pattern": "click analytics",
+     "why": "unanswered question another master could answer"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "open-rate-limit",
+     "expect": "include",
+     "pattern": "rate limiting",
+     "why": "unanswered question inside a multi-part message"
+    },
+    "ok": true,
+    "detail": "present"
+   },
+   {
+    "check": {
+     "id": "answered-question",
+     "expect": "exclude",
+     "pattern": "What format should the short codes have",
+     "why": "answered by master-a's base62 decision"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "hypothesis",
+     "expect": "exclude_as_fact",
+     "pattern": "hash collisions",
+     "why": "a guess must not appear as a fact or decision"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "noise-thanks",
+     "expect": "exclude",
+     "pattern": "Thanks!",
+     "why": "noise"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "noise-continuing",
+     "expect": "exclude",
+     "pattern": "continuing with the migrations",
+     "why": "noise"
+    },
+    "ok": true,
+    "detail": "absent"
+   },
+   {
+    "check": {
+     "id": "first-guess",
+     "expect": "exclude_as_fact",
+     "pattern": "My first thought is Postgres",
+     "why": "tentative and since superseded"
+    },
+    "ok": true,
+    "detail": "absent"
+   }
+  ]
+ }
+]

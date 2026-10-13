@@ -1,0 +1,21 @@
+{
+  "name": "toy",
+  "repo": "repo",
+  "task": "Two changes to toykv, a small Go key-value store: entries that expire, and saving and loading a store.",
+  "topics": {
+    "expiry": "entries that expire: SetWithTTL, how expiry is stored and checked",
+    "persistence": "Save and Load: the JSON format and what it keeps",
+    "testing": "test results and how to run them"
+  },
+  "env": {"GOCACHE": "$CACHE/go-build", "GOTOOLCHAIN": "local", "GOFLAGS": "-count=1"},
+  "setup": ["go build ./..."],
+  "agents": [
+    {"name": "master-a", "issue": "issues/ttl.md", "tests": "tests/ttl", "test": "go test ./...", "gold": "gold/ttl"},
+    {"name": "master-b", "issue": "issues/save.md", "tests": "tests/save", "test": "go test ./...", "gold": "gold/save"}
+  ],
+  "test_glob": "*_test.go",
+  "combined_tests": "tests/combined",
+  "combined_test": "go test ./...",
+  "combined_gold": "gold/combined",
+  "timeout": "15m"
+}

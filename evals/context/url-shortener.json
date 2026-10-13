@@ -1,0 +1,49 @@
+{
+  "name": "url-shortener",
+  "task": "Build a URL shortener HTTP API. master-a owns storage and IDs, master-b owns the HTTP API.",
+  "topics": {
+    "storage": "where and how links are stored: database choice, schema, migrations",
+    "ids": "short code format and how IDs are generated",
+    "http_api": "endpoints, request validation, status codes and redirects",
+    "analytics": "click tracking and reporting",
+    "testing": "tests, load tests and benchmarks",
+    "ownership": "who works on which part"
+  },
+  "steps": [
+    {"master": "master-a", "stream": true, "text": "I'll take the storage layer and ID generation.\n\nMy first thought is Postgres: we get transactions and a sequence for IDs for free. I haven't benchmarked anything yet, so treat that as a starting point.\n\nOpen question for whoever owns the API: do we need per-link click analytics in the MVP? It changes the schema a lot."},
+    {"master": "master-b", "text": "Taking the HTTP API: POST /links to create, GET /{code} to redirect."},
+    {"master": "master-a", "text": "Decision: we will use Postgres 17 as the datastore, with a bigint identity column as the source of IDs."},
+    {"master": "master-b", "text": "What format should the short codes have? I need to know the max length to validate the path."},
+    {"master": "master-a", "text": "Short codes are the bigint ID encoded in base62, left-padded to 7 characters. That's final; max length is 7."},
+    {"master": "master-b", "text": "Got it, I'm using Postgres 17 as the datastore like master-a decided."},
+    {"master": "master-b", "tool": {"name": "lookup", "arguments": "{\"query\": \"which HTTP status for a URL shortener redirect\"}", "output": "Use 302 Found for links that may change; 301 is cached permanently by browsers."}},
+    {"master": "master-b", "text": "We will return 302 for redirects, not 301, so links can be edited later."},
+    {"master": "master-a", "text": "Change of plan after talking it through: for the MVP we'll use SQLite instead of Postgres. One file, no server to run, and our expected load is small. Postgres stays an option for later."},
+    {"master": "master-b", "text": "I decided to keep the link table in Redis for now, it was quicker to wire up in the API service."},
+    {"master": "master-a", "text": "Maybe hash collisions could become a problem if we ever switch from sequence IDs to random codes."},
+    {"master": "master-a", "text": "Okay, continuing with the migrations."},
+    {"master": "master-a", "text": "Load test on SQLite with WAL enabled: 1,200 creates/s and 9,000 redirects/s, p99 latency 45 ms. That's well above what we need."},
+    {"master": "master-b", "text": "Thanks!"},
+    {"master": "master-b", "stream": true, "text": "Here is the redirect handler:\n\n```python\n@app.get(\"/{code}\")\nasync def redirect(code: str):\n    if len(code) > 7:\n        raise HTTPException(404)\n    url = await store.resolve(code)\n    if url is None:\n        raise HTTPException(404)\n    return RedirectResponse(url, status_code=302)\n```"},
+    {"master": "master-b", "stream": true, "text": "Progress update:\n\n- POST /links validates URLs and rejects anything that isn't http or https.\n- GET /{code} returns 404 for unknown codes.\n- All 18 API tests pass.\n\nStill unsure whether we need rate limiting on POST /links."}
+  ],
+  "checks": [
+    {"id": "storage-current", "expect": "include", "pattern": "SQLite instead of Postgres", "why": "master-a's latest storage decision"},
+    {"id": "storage-superseded", "expect": "exclude", "pattern": "will use Postgres 17 as the datastore", "why": "superseded by master-a's own later decision"},
+    {"id": "echo", "expect": "exclude", "pattern": "like master-a decided", "why": "master-b restating master-a, not new information"},
+    {"id": "code-format", "expect": "include", "pattern": "base62", "why": "decision other masters need"},
+    {"id": "redirect-status", "expect": "include", "pattern": "302", "why": "API decision"},
+    {"id": "load-test", "expect": "include", "pattern": "1,200 creates/s", "why": "verified result"},
+    {"id": "api-tests", "expect": "include", "pattern": "18 API tests pass", "why": "fact inside a multi-part message"},
+    {"id": "url-validation", "expect": "include", "pattern": "rejects anything that isn't http", "why": "fact inside a multi-part message"},
+    {"id": "conflict-visible", "expect": "include", "pattern": "Redis", "why": "master-b's storage choice conflicts with master-a's and must be visible"},
+    {"id": "conflict-flagged", "expect": "include", "pattern": "conflicts with #|storage \\(decisions from master-a and master-b; check that they agree\\)", "why": "the storage disagreement is flagged, not silently resolved"},
+    {"id": "open-analytics", "expect": "include", "pattern": "click analytics", "why": "unanswered question another master could answer"},
+    {"id": "open-rate-limit", "expect": "include", "pattern": "rate limiting", "why": "unanswered question inside a multi-part message"},
+    {"id": "answered-question", "expect": "exclude", "pattern": "What format should the short codes have", "why": "answered by master-a's base62 decision"},
+    {"id": "hypothesis", "expect": "exclude_as_fact", "pattern": "hash collisions", "why": "a guess must not appear as a fact or decision"},
+    {"id": "noise-thanks", "expect": "exclude", "pattern": "Thanks!", "why": "noise"},
+    {"id": "noise-continuing", "expect": "exclude", "pattern": "continuing with the migrations", "why": "noise"},
+    {"id": "first-guess", "expect": "exclude_as_fact", "pattern": "My first thought is Postgres", "why": "tentative and since superseded"}
+  ]
+}

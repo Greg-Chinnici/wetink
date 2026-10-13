@@ -1,0 +1,761 @@
+{
+ "questions": [
+  {
+   "topics": [],
+   "ask_kind": true,
+   "json": "{\"kind\":{\"type\":\"choice\",\"instructions\":\"What kind of contribution is this item from an AI agent?\",\"criteria\":{\"fact\":\"verified information or an observed result\",\"decision\":\"a choice the agent has committed to\",\"hypothesis\":\"a guess, assumption, suggestion or unverified idea\",\"open_question\":\"a question, or something unresolved that needs an answer\",\"narration\":\"only the agent's own process or next steps (checking, reading, sharing, writing up), with no choice, result or question about the task\"}},\"relevance\":{\"type\":\"score\",\"instructions\":\"How relevant and reliable is this item for other agents working on the same task?\",\"criteria\":[\"noise: chit-chat, narration of what the agent is about to do, no new information\",\"a minor detail or weakly supported\",\"somewhat useful, or useful but uncertain\",\"specific, reliable and useful\",\"a committed decision or verified result the other agents must know\"]}}"
+  },
+  {
+   "topics": [],
+   "ask_kind": false,
+   "json": "{\"relevance\":{\"type\":\"score\",\"instructions\":\"How relevant and reliable is this item for other agents working on the same task?\",\"criteria\":[\"noise: chit-chat, narration of what the agent is about to do, no new information\",\"a minor detail or weakly supported\",\"somewhat useful, or useful but uncertain\",\"specific, reliable and useful\",\"a committed decision or verified result the other agents must know\"]}}"
+  },
+  {
+   "topics": [
+    [
+     "storage",
+     "where and how links are stored"
+    ],
+    [
+     "ids",
+     null
+    ]
+   ],
+   "ask_kind": true,
+   "json": "{\"kind\":{\"type\":\"choice\",\"instructions\":\"What kind of contribution is this item from an AI agent?\",\"criteria\":{\"fact\":\"verified information or an observed result\",\"decision\":\"a choice the agent has committed to\",\"hypothesis\":\"a guess, assumption, suggestion or unverified idea\",\"open_question\":\"a question, or something unresolved that needs an answer\",\"narration\":\"only the agent's own process or next steps (checking, reading, sharing, writing up), with no choice, result or question about the task\"}},\"relevance\":{\"type\":\"score\",\"instructions\":\"How relevant and reliable is this item for other agents working on the same task?\",\"criteria\":[\"noise: chit-chat, narration of what the agent is about to do, no new information\",\"a minor detail or weakly supported\",\"somewhat useful, or useful but uncertain\",\"specific, reliable and useful\",\"a committed decision or verified result the other agents must know\"]},\"topic\":{\"type\":\"choice\",\"instructions\":\"Which topic is the item about?\",\"criteria\":{\"storage\":\"where and how links are stored\",\"ids\":null,\"(new)\":\"none of the other topics fits\"}}}"
+  },
+  {
+   "topics": [
+    [
+     "storage",
+     "where and how links are stored"
+    ],
+    [
+     "ids",
+     null
+    ]
+   ],
+   "ask_kind": false,
+   "json": "{\"relevance\":{\"type\":\"score\",\"instructions\":\"How relevant and reliable is this item for other agents working on the same task?\",\"criteria\":[\"noise: chit-chat, narration of what the agent is about to do, no new information\",\"a minor detail or weakly supported\",\"somewhat useful, or useful but uncertain\",\"specific, reliable and useful\",\"a committed decision or verified result the other agents must know\"]},\"topic\":{\"type\":\"choice\",\"instructions\":\"Which topic is the item about?\",\"criteria\":{\"storage\":\"where and how links are stored\",\"ids\":null,\"(new)\":\"none of the other topics fits\"}}}"
+  },
+  {
+   "topics": [
+    [
+     "b",
+     "second"
+    ],
+    [
+     "a",
+     "first"
+    ],
+    [
+     "z",
+     null
+    ],
+    [
+     "m",
+     "middle"
+    ]
+   ],
+   "ask_kind": true,
+   "json": "{\"kind\":{\"type\":\"choice\",\"instructions\":\"What kind of contribution is this item from an AI agent?\",\"criteria\":{\"fact\":\"verified information or an observed result\",\"decision\":\"a choice the agent has committed to\",\"hypothesis\":\"a guess, assumption, suggestion or unverified idea\",\"open_question\":\"a question, or something unresolved that needs an answer\",\"narration\":\"only the agent's own process or next steps (checking, reading, sharing, writing up), with no choice, result or question about the task\"}},\"relevance\":{\"type\":\"score\",\"instructions\":\"How relevant and reliable is this item for other agents working on the same task?\",\"criteria\":[\"noise: chit-chat, narration of what the agent is about to do, no new information\",\"a minor detail or weakly supported\",\"somewhat useful, or useful but uncertain\",\"specific, reliable and useful\",\"a committed decision or verified result the other agents must know\"]},\"topic\":{\"type\":\"choice\",\"instructions\":\"Which topic is the item about?\",\"criteria\":{\"b\":\"second\",\"a\":\"first\",\"z\":null,\"m\":\"middle\",\"(new)\":\"none of the other topics fits\"}}}"
+  },
+  {
+   "topics": [
+    [
+     "b",
+     "second"
+    ],
+    [
+     "a",
+     "first"
+    ],
+    [
+     "z",
+     null
+    ],
+    [
+     "m",
+     "middle"
+    ]
+   ],
+   "ask_kind": false,
+   "json": "{\"relevance\":{\"type\":\"score\",\"instructions\":\"How relevant and reliable is this item for other agents working on the same task?\",\"criteria\":[\"noise: chit-chat, narration of what the agent is about to do, no new information\",\"a minor detail or weakly supported\",\"somewhat useful, or useful but uncertain\",\"specific, reliable and useful\",\"a committed decision or verified result the other agents must know\"]},\"topic\":{\"type\":\"choice\",\"instructions\":\"Which topic is the item about?\",\"criteria\":{\"b\":\"second\",\"a\":\"first\",\"z\":null,\"m\":\"middle\",\"(new)\":\"none of the other topics fits\"}}}"
+  }
+ ],
+ "relation_questions": [
+  {
+   "refs": [
+    "#1"
+   ],
+   "json": "{\"relation\":{\"type\":\"choice\",\"instructions\":\"How does the new entry relate to the existing entries?\",\"criteria\":{\"new\":\"adds information that is not in the existing entries\",\"restates\":\"repeats, confirms or acknowledges an existing entry without adding information\",\"replaces\":\"revises, reverses or replaces an existing entry, which no longer holds\",\"answers\":\"answers an open question among the existing entries\",\"contradicts\":\"disagrees with or conflicts with an existing entry\"}},\"target\":{\"type\":\"choice\",\"instructions\":\"Which existing entry does the new entry restate, replace, answer or contradict?\",\"criteria\":{\"#1\":null,\"none\":\"none of them\"}}}"
+  },
+  {
+   "refs": [
+    "#12",
+    "#3",
+    "#40"
+   ],
+   "json": "{\"relation\":{\"type\":\"choice\",\"instructions\":\"How does the new entry relate to the existing entries?\",\"criteria\":{\"new\":\"adds information that is not in the existing entries\",\"restates\":\"repeats, confirms or acknowledges an existing entry without adding information\",\"replaces\":\"revises, reverses or replaces an existing entry, which no longer holds\",\"answers\":\"answers an open question among the existing entries\",\"contradicts\":\"disagrees with or conflicts with an existing entry\"}},\"target\":{\"type\":\"choice\",\"instructions\":\"Which existing entry does the new entry restate, replace, answer or contradict?\",\"criteria\":{\"#12\":null,\"#3\":null,\"#40\":null,\"none\":\"none of them\"}}}"
+  }
+ ],
+ "relate_state": "{\"existing entries\":{\"#12\":\"[fact from master-a] x\",\"#3\":\"[decision from master-b] y\"},\"new entry\":\"[decision from master-a] z\"}",
+ "parse_systemone": [
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "fact",
+      "probabilities": {
+       "fact": 1.0
+      }
+     },
+     "relevance": {
+      "score": 3.2,
+      "confidence": 0.4
+     },
+     "topic": {
+      "choice": "storage",
+      "probabilities": {
+       "storage": 1.0
+      }
+     }
+    }
+   },
+   "kind": null,
+   "result": {
+    "topic": "storage",
+    "kind": "fact",
+    "final": true,
+    "score": 4.2,
+    "confidence": 0.4,
+    "needs_name": false
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "decision",
+      "probabilities": {
+       "decision": 1.0
+      }
+     },
+     "relevance": {
+      "score": 4.0,
+      "confidence": 0.9
+     }
+    }
+   },
+   "kind": null,
+   "result": {
+    "topic": "general",
+    "kind": "decision",
+    "final": true,
+    "score": 5.0,
+    "confidence": 0.9,
+    "needs_name": true
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "hypothesis",
+      "probabilities": {
+       "hypothesis": 1.0
+      }
+     },
+     "relevance": {
+      "score": 2.0,
+      "confidence": 0.5
+     },
+     "topic": {
+      "choice": "(new)",
+      "probabilities": {
+       "(new)": 0.9,
+       "a": 0.1
+      }
+     }
+    }
+   },
+   "kind": null,
+   "result": {
+    "topic": "a",
+    "kind": "hypothesis",
+    "final": false,
+    "score": 3.0,
+    "confidence": 0.5,
+    "needs_name": false
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "fact",
+      "probabilities": {
+       "fact": 1.0
+      }
+     },
+     "relevance": {
+      "score": 3.5,
+      "confidence": 0.5
+     },
+     "topic": {
+      "choice": "(new)",
+      "probabilities": {
+       "(new)": 0.5,
+       "a": 0.3,
+       "b": 0.2
+      }
+     }
+    }
+   },
+   "kind": null,
+   "result": {
+    "topic": "a",
+    "kind": "fact",
+    "final": true,
+    "score": 4.5,
+    "confidence": 0.5,
+    "needs_name": false
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "fact",
+      "probabilities": {
+       "fact": 1.0
+      }
+     },
+     "relevance": {
+      "score": 3.5,
+      "confidence": 0.5
+     },
+     "topic": {
+      "choice": "(new)",
+      "probabilities": {
+       "(new)": 0.7,
+       "a": 0.3
+      }
+     }
+    }
+   },
+   "kind": null,
+   "result": {
+    "topic": "general",
+    "kind": "fact",
+    "final": true,
+    "score": 4.5,
+    "confidence": 0.5,
+    "needs_name": true
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "decision",
+      "probabilities": {
+       "decision": 1.0
+      }
+     },
+     "relevance": {
+      "score": 9.0,
+      "confidence": 1.0
+     },
+     "topic": {
+      "choice": "Some Topic!",
+      "probabilities": {
+       "Some Topic!": 1.0
+      }
+     }
+    }
+   },
+   "kind": null,
+   "result": {
+    "topic": "some_topic",
+    "kind": "decision",
+    "final": true,
+    "score": 5.0,
+    "confidence": 1.0,
+    "needs_name": false
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "decision",
+      "probabilities": {
+       "decision": 1.0
+      }
+     },
+     "relevance": {
+      "score": -3.0,
+      "confidence": 0.1
+     },
+     "topic": {
+      "choice": "a",
+      "probabilities": {
+       "a": 1.0
+      }
+     }
+    }
+   },
+   "kind": null,
+   "result": {
+    "topic": "a",
+    "kind": "decision",
+    "final": true,
+    "score": 1.0,
+    "confidence": 0.1,
+    "needs_name": false
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "relevance": {
+      "score": 2.0,
+      "confidence": 0.3
+     },
+     "topic": {
+      "choice": "a",
+      "probabilities": {
+       "a": 1.0
+      }
+     }
+    }
+   },
+   "kind": "artifact",
+   "result": {
+    "topic": "a",
+    "kind": "artifact",
+    "final": true,
+    "score": 3.0,
+    "confidence": 0.3,
+    "needs_name": false
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "open_question",
+      "probabilities": {
+       "open_question": 1.0
+      }
+     },
+     "relevance": {
+      "score": 1.6,
+      "confidence": 0.5
+     },
+     "topic": {
+      "choice": "(new)",
+      "probabilities": {
+       "(new)": 0.8
+      }
+     }
+    }
+   },
+   "kind": null,
+   "result": {
+    "topic": "general",
+    "kind": "open_question",
+    "final": false,
+    "score": 2.6,
+    "confidence": 0.5,
+    "needs_name": true
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "fact",
+      "probabilities": {
+       "fact": 1.0
+      }
+     },
+     "relevance": {
+      "score": 1.0,
+      "confidence": 0.5
+     },
+     "topic": {
+      "choice": "(new)",
+      "probabilities": {
+       "(new)": 0.9
+      }
+     }
+    }
+   },
+   "kind": null,
+   "result": {
+    "topic": "new",
+    "kind": "fact",
+    "final": true,
+    "score": 2.0,
+    "confidence": 0.5,
+    "needs_name": false
+   }
+  },
+  {
+   "response": {
+    "answers": {
+     "kind": {
+      "choice": "nonsense"
+     },
+     "relevance": {
+      "score": 1,
+      "confidence": 1
+     }
+    }
+   },
+   "kind": null,
+   "error": true
+  },
+  {
+   "response": {
+    "nope": 1
+   },
+   "kind": null,
+   "error": true
+  }
+ ],
+ "parse_relation": [
+  {
+   "response": {
+    "answers": {
+     "relation": {
+      "choice": "replaces",
+      "probabilities": {
+       "replaces": 0.8
+      }
+     },
+     "target": {
+      "choice": "#12"
+     }
+    }
+   },
+   "result": [
+    "replaces",
+    12,
+    0.8
+   ]
+  },
+  {
+   "response": {
+    "answers": {
+     "relation": {
+      "choice": "answers",
+      "probabilities": {
+       "answers": 0.4
+      }
+     },
+     "target": {
+      "choice": "#3"
+     }
+    }
+   },
+   "result": [
+    "new",
+    null,
+    0.4
+   ]
+  },
+  {
+   "response": {
+    "answers": {
+     "relation": {
+      "choice": "restates",
+      "probabilities": {
+       "restates": 0.9
+      }
+     },
+     "target": {
+      "choice": "none"
+     }
+    }
+   },
+   "result": [
+    "new",
+    null,
+    0.9
+   ]
+  },
+  {
+   "response": {
+    "answers": {
+     "relation": {
+      "choice": "new",
+      "probabilities": {
+       "new": 0.95
+      }
+     },
+     "target": {
+      "choice": "#3"
+     }
+    }
+   },
+   "result": [
+    "new",
+    null,
+    0.95
+   ]
+  },
+  {
+   "response": {
+    "answers": {
+     "relation": {
+      "choice": "bogus",
+      "probabilities": {
+       "bogus": 0.9
+      }
+     },
+     "target": {
+      "choice": "#3"
+     }
+    }
+   },
+   "error": true
+  },
+  {
+   "response": {
+    "answers": {}
+   },
+   "error": true
+  }
+ ],
+ "parse_chat": [
+  {
+   "raw": "{\"topic\": \"storage\", \"new_topic\": \"\", \"kind\": \"fact\", \"final\": true, \"score\": 4}",
+   "result": [
+    "storage",
+    "fact",
+    true,
+    4.0
+   ]
+  },
+  {
+   "raw": "Sure! ```json\n{\"topic\": \"(new)\", \"new_topic\": \"Rate Limits\", \"kind\": \"decision\", \"final\": true, \"score\": 7}\n```",
+   "result": [
+    "rate_limits",
+    "decision",
+    true,
+    5.0
+   ]
+  },
+  {
+   "raw": "{\"topic\": \"(new)\", \"new_topic\": \"\", \"kind\": \"hypothesis\", \"final\": false, \"score\": 0}",
+   "result": [
+    "general",
+    "hypothesis",
+    false,
+    1.0
+   ]
+  },
+  {
+   "raw": "{\"topic\": \"x\", \"kind\": \"fact\", \"final\": \"yes\", \"score\": 3}",
+   "error": true
+  },
+  {
+   "raw": "{\"topic\": \"x\", \"kind\": \"fact\", \"final\": true, \"score\": true}",
+   "error": true
+  },
+  {
+   "raw": "{\"topic\": \"x\", \"kind\": \"fact\", \"final\": true, \"score\": 3.5}",
+   "error": true
+  },
+  {
+   "raw": "no json at all",
+   "error": true
+  }
+ ],
+ "text_format": [
+  "{\"format\":{\"type\":\"json_schema\",\"name\":\"wetink_classification\",\"strict\":true,\"schema\":{\"type\":\"object\",\"properties\":{\"topic\":{\"type\":\"string\",\"enum\":[\"(new)\"]},\"new_topic\":{\"type\":\"string\"},\"kind\":{\"type\":\"string\",\"enum\":[\"fact\",\"decision\",\"hypothesis\",\"open_question\",\"artifact\"]},\"final\":{\"type\":\"boolean\"},\"score\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":5}},\"required\":[\"topic\",\"new_topic\",\"kind\",\"final\",\"score\"],\"additionalProperties\":false}}}",
+  "{\"format\":{\"type\":\"json_schema\",\"name\":\"wetink_classification\",\"strict\":true,\"schema\":{\"type\":\"object\",\"properties\":{\"topic\":{\"type\":\"string\",\"enum\":[\"storage\",\"ids\",\"(new)\"]},\"new_topic\":{\"type\":\"string\"},\"kind\":{\"type\":\"string\",\"enum\":[\"fact\",\"decision\",\"hypothesis\",\"open_question\",\"artifact\"]},\"final\":{\"type\":\"boolean\"},\"score\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":5}},\"required\":[\"topic\",\"new_topic\",\"kind\",\"final\",\"score\"],\"additionalProperties\":false}}}"
+ ],
+ "instructions": "You classify one item produced by an AI agent (a \"master\") that works alongside other masters.\nReturn JSON with:\n- topic: the known topic the item is about. Only if none of them fits, use \"(new)\".\n- new_topic: when topic is \"(new)\", a short snake_case label (1-3 words); otherwise \"\".\n- kind: one of\n  fact: verified information or an observed result\n  decision: a choice the master has committed to\n  hypothesis: a guess, assumption or unverified idea\n  open_question: something unresolved that needs an answer\n  artifact: produced content such as code, a document or a config\n- final: true only if the item is stated as settled or committed; false if it is tentative, exploratory or still in progress.\n- score: how relevant and reliable the item is for the other masters, 1-5:\n  5: a committed decision or verified result the others must know\n  4: specific, reliable and useful\n  3: somewhat useful, or useful but uncertain\n  2: a minor detail or weakly supported\n  1: noise: chit-chat, narration of what the master is about to do, no new information\n\nExamples:\nKnown topics: storage\n<item>Benchmarked both: SQLite handles 2k writes/s, Postgres 15k writes/s on the same box.</item>\n{\"topic\": \"storage\", \"new_topic\": \"\", \"kind\": \"fact\", \"final\": true, \"score\": 4}\n\nKnown topics: storage, deployment\n<item>Going with Fly.io for hosting; the Heroku option is dropped.</item>\n{\"topic\": \"deployment\", \"new_topic\": \"\", \"kind\": \"decision\", \"final\": true, \"score\": 5}\n\nKnown topics: none yet\n<item>Perhaps the timeout is caused by DNS resolution, need to check.</item>\n{\"topic\": \"(new)\", \"new_topic\": \"timeouts\", \"kind\": \"hypothesis\", \"final\": false, \"score\": 3}\n\nKnown topics: deployment\n<item>Let me read the config files next.</item>\n{\"topic\": \"deployment\", \"new_topic\": \"\", \"kind\": \"fact\", \"final\": false, \"score\": 1}",
+ "build_input": [
+  "Known topics: none yet\n\n<item master=\"master-a\">\nUse SQLite.\n</item>",
+  "Known topics: storage, ids\n\n<item master=\"master-b\">\nUse SQLite.\n</item>"
+ ],
+ "normalize_topic": {
+  "Storage": "storage",
+  "HTTP API": "http_api",
+  "  __x__ ": "x",
+  "": "general",
+  "!!!": "general",
+  "Café Menu": "caf_menu",
+  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "DB/Schema-v2": "db_schema_v2"
+ },
+ "visible": [
+  [
+   "fact",
+   1.0,
+   false
+  ],
+  [
+   "fact",
+   2.4,
+   false
+  ],
+  [
+   "fact",
+   2.5,
+   false
+  ],
+  [
+   "fact",
+   2.99,
+   false
+  ],
+  [
+   "fact",
+   3.0,
+   true
+  ],
+  [
+   "fact",
+   5.0,
+   true
+  ],
+  [
+   "decision",
+   1.0,
+   false
+  ],
+  [
+   "decision",
+   2.4,
+   false
+  ],
+  [
+   "decision",
+   2.5,
+   false
+  ],
+  [
+   "decision",
+   2.99,
+   false
+  ],
+  [
+   "decision",
+   3.0,
+   true
+  ],
+  [
+   "decision",
+   5.0,
+   true
+  ],
+  [
+   "hypothesis",
+   1.0,
+   false
+  ],
+  [
+   "hypothesis",
+   2.4,
+   false
+  ],
+  [
+   "hypothesis",
+   2.5,
+   false
+  ],
+  [
+   "hypothesis",
+   2.99,
+   false
+  ],
+  [
+   "hypothesis",
+   3.0,
+   false
+  ],
+  [
+   "hypothesis",
+   5.0,
+   false
+  ],
+  [
+   "open_question",
+   1.0,
+   false
+  ],
+  [
+   "open_question",
+   2.4,
+   false
+  ],
+  [
+   "open_question",
+   2.5,
+   true
+  ],
+  [
+   "open_question",
+   2.99,
+   true
+  ],
+  [
+   "open_question",
+   3.0,
+   true
+  ],
+  [
+   "open_question",
+   5.0,
+   true
+  ],
+  [
+   "artifact",
+   1.0,
+   false
+  ],
+  [
+   "artifact",
+   2.4,
+   false
+  ],
+  [
+   "artifact",
+   2.5,
+   false
+  ],
+  [
+   "artifact",
+   2.99,
+   false
+  ],
+  [
+   "artifact",
+   3.0,
+   true
+  ],
+  [
+   "artifact",
+   5.0,
+   true
+  ]
+ ],
+ "question_regex": {
+  "Why?": true,
+  "Why? Because.": true,
+  "a?b": false,
+  "url?x=1": false,
+  "done?\n": true,
+  "no question": false,
+  "¿Qué?": true
+ },
+ "_notes": [
+  "questions: the narration kind was added in Go after the port (not from the Python code)."
+ ]
+}

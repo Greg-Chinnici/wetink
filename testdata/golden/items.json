@@ -1,0 +1,255 @@
+{
+ "item_parts": [
+  {
+   "item": {
+    "type": "message",
+    "content": [
+     {
+      "type": "output_text",
+      "text": "A.\n\nB.\n\nLead:"
+     }
+    ]
+   },
+   "call": null,
+   "via": "tap",
+   "partial": false,
+   "parts": [
+    "A.",
+    "B.",
+    "Lead:"
+   ]
+  },
+  {
+   "item": {
+    "type": "message",
+    "content": [
+     {
+      "type": "output_text",
+      "text": "A.\n\nB.\n\nLead:"
+     }
+    ]
+   },
+   "call": null,
+   "via": "tap",
+   "partial": true,
+   "parts": [
+    "A.",
+    "B."
+   ]
+  },
+  {
+   "item": {
+    "type": "message",
+    "content": "plain string content"
+   },
+   "call": null,
+   "via": "tap",
+   "partial": false,
+   "parts": [
+    "plain string content"
+   ]
+  },
+  {
+   "item": {
+    "type": "message",
+    "content": [
+     {
+      "type": "refusal",
+      "refusal": "no"
+     },
+     {
+      "text": "yes"
+     }
+    ]
+   },
+   "call": null,
+   "via": "tap",
+   "partial": false,
+   "parts": [
+    "no\nyes"
+   ]
+  },
+  {
+   "item": {
+    "type": "function_call_output",
+    "call_id": "c1",
+    "output": "  result  "
+   },
+   "call": {
+    "type": "function_call",
+    "call_id": "c1",
+    "name": "lookup",
+    "arguments": "{\"q\": 1}"
+   },
+   "via": "tap",
+   "partial": false,
+   "parts": [
+    "Tool call lookup({\"q\": 1}) returned:\n  result"
+   ]
+  },
+  {
+   "item": {
+    "type": "function_call_output",
+    "call_id": "c9",
+    "output": "orphan"
+   },
+   "call": null,
+   "via": "tap",
+   "partial": false,
+   "parts": [
+    "Tool call c9 returned:\norphan"
+   ]
+  },
+  {
+   "item": {
+    "type": "function_call_output",
+    "call_id": "c1",
+    "output": "   "
+   },
+   "call": {
+    "type": "function_call",
+    "call_id": "c1",
+    "name": "lookup",
+    "arguments": "{\"q\": 1}"
+   },
+   "via": "tap",
+   "partial": false,
+   "parts": [
+    "Tool call lookup({\"q\": 1}) returned:"
+   ]
+  },
+  {
+   "item": {
+    "type": "function_call_output",
+    "call_id": "c2",
+    "output": "## pulled"
+   },
+   "call": {
+    "type": "function_call",
+    "call_id": "c2",
+    "name": "get_shared_context"
+   },
+   "via": "tap",
+   "partial": false,
+   "parts": []
+  },
+  {
+   "item": {
+    "type": "function_call",
+    "id": "fc_1",
+    "call_id": "c3",
+    "name": "share_context",
+    "arguments": "{\"text\": \" We will use SQLite. \", \"kind\": \"decision\", \"topic\": \"Storage\"}"
+   },
+   "call": null,
+   "via": "mcp",
+   "partial": false,
+   "parts": [
+    "We will use SQLite."
+   ]
+  },
+  {
+   "item": {
+    "type": "function_call",
+    "id": "fc_1",
+    "call_id": "c3",
+    "name": "share_context",
+    "arguments": "{\"text\": \" We will use SQLite. \", \"kind\": \"decision\", \"topic\": \"Storage\"}"
+   },
+   "call": null,
+   "via": "tap",
+   "partial": false,
+   "parts": []
+  },
+  {
+   "item": {
+    "type": "function_call",
+    "id": "fc_1",
+    "call_id": "c3",
+    "name": "share_context",
+    "arguments": "not json"
+   },
+   "call": null,
+   "via": "mcp",
+   "partial": false,
+   "parts": []
+  },
+  {
+   "item": {
+    "type": "function_call",
+    "id": "fc_1",
+    "call_id": "c3",
+    "name": "share_context",
+    "arguments": "{\"text\": \"  \"}"
+   },
+   "call": null,
+   "via": "mcp",
+   "partial": false,
+   "parts": []
+  },
+  {
+   "item": {
+    "type": "function_call",
+    "id": "fc_1",
+    "call_id": "c3",
+    "name": "share_context",
+    "arguments": "[1, 2]"
+   },
+   "call": null,
+   "via": "mcp",
+   "partial": false,
+   "parts": []
+  },
+  {
+   "item": {
+    "type": "function_call",
+    "call_id": "c1",
+    "name": "lookup",
+    "arguments": "{\"q\": 1}"
+   },
+   "call": null,
+   "via": "tap",
+   "partial": false,
+   "parts": []
+  },
+  {
+   "item": {
+    "type": "reasoning"
+   },
+   "call": null,
+   "via": "tap",
+   "partial": false,
+   "parts": []
+  }
+ ],
+ "labels": [
+  [
+   "open_question",
+   "master-a",
+   "Why?",
+   "[open question from master-a] Why?"
+  ],
+  [
+   "fact",
+   "m",
+   "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé",
+   "[fact from m] éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé ..."
+  ]
+ ],
+ "share_args": [
+  [
+   "{\"text\": \" We will use SQLite. \", \"kind\": \"decision\", \"topic\": \"Storage\"}",
+   "mcp",
+   {
+    "text": " We will use SQLite. ",
+    "kind": "decision",
+    "topic": "Storage"
+   }
+  ],
+  [
+   "{}",
+   "mcp",
+   null
+  ]
+ ]
+}

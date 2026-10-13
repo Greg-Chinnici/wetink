@@ -1,0 +1,35 @@
+{
+  "name": "pull-and-share",
+  "task": "Build a URL shortener HTTP API. master-a owns storage and IDs, master-b joins later and owns the HTTP API.",
+  "topics": {
+    "storage": "where and how links are stored",
+    "ids": "short code format and how IDs are generated",
+    "http_api": "endpoints, status codes and redirects"
+  },
+  "steps": [
+    {"master": "master-a", "text": "I'm taking storage. We'll use SQLite for the MVP: one file and no server to run."},
+    {"master": "master-a", "text": "Open question for whoever owns the API: which status code should redirects use?"},
+    {"master": "master-a", "id": "pull-a1", "pull": {}},
+    {"master": "master-b", "text": "Starting on the HTTP API. POST /links creates a short link and returns it as JSON."},
+    {"master": "master-b", "id": "pull-b1", "pull": {}},
+    {"master": "master-b", "share": {"text": "Redirects return 302, not 301, so links can be edited later.", "kind": "decision", "topic": "http_api"}},
+    {"master": "master-b", "share": {"text": "Short codes are 7 characters of base62.", "kind": "decision", "topic": "ids"}},
+    {"master": "master-b", "share": {"text": "Change of plan: short codes are 8 characters of base62, to leave room for growth.", "kind": "decision", "topic": "ids"}},
+    {"master": "master-a", "id": "pull-a2", "pull": {"since": "last"}}
+  ],
+  "checks": [
+    {"id": "b-sees-storage", "in": "pull-b1", "expect": "include", "pattern": "SQLite for the MVP", "why": "a master joining mid-run pulls the other's decision"},
+    {"id": "b-sees-question", "in": "pull-b1", "expect": "include", "pattern": "which status code", "why": "open questions are pulled too"},
+    {"id": "b-not-own", "in": "pull-b1", "expect": "exclude", "pattern": "POST /links creates", "why": "a master's own entries are left out of its pull"},
+    {"id": "b-told-since", "in": "pull-b1", "expect": "include", "pattern": "since_seq=\\d+", "why": "the pull says how to ask for later changes"},
+    {"id": "declared", "expect": "include", "pattern": "from master-b, declared, #\\d+\\] Redirects return 302", "why": "a share becomes a declared entry"},
+    {"id": "question-answered", "expect": "exclude", "pattern": "which status code should redirects use", "why": "the declared 302 decision answers master-a's question"},
+    {"id": "share-revised", "expect": "exclude", "pattern": "7 characters of base62", "why": "master-b's revised share supersedes its earlier one"},
+    {"id": "share-current", "expect": "include", "pattern": "8 characters of base62", "why": "the revision is current"},
+    {"id": "no-echo", "expect": "exclude", "pattern": "from master-b[^\\]]*\\] [^\\n]*SQLite", "why": "pulled context never comes back as the puller's entry"},
+    {"id": "a-sees-share", "in": "pull-a2", "expect": "include", "pattern": "Redirects return 302", "why": "master-a's next pull brings master-b's share"},
+    {"id": "a-told-answered", "in": "pull-a2", "expect": "include", "pattern": "was answered by", "why": "the pull says master-a's question was answered"},
+    {"id": "a-only-changes", "in": "pull-a2", "expect": "exclude", "pattern": "7 characters of base62", "why": "a change pull leaves out what was superseded within it"},
+    {"id": "a-not-own", "in": "pull-a2", "expect": "exclude", "pattern": "SQLite for the MVP", "why": "own entries, and nothing from before since_seq"}
+  ]
+}

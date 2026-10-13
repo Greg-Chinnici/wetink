@@ -1,0 +1,46 @@
+{
+  "name": "docs-migration",
+  "task": "Move the company docs site off Jekyll. master-a migrates the content and picks the generator, master-b owns hosting and CI.",
+  "topics": {
+    "content": "migrating the pages and their markup",
+    "generator": "which static-site generator and its configuration",
+    "hosting": "where and how the site is served",
+    "ci": "the build and deploy pipeline",
+    "urls": "domain, redirects and feeds"
+  },
+  "steps": [
+    {"master": "master-a", "text": "Starting on the content migration.\n\nThere are 214 Markdown pages, and 38 of them use Liquid includes that won't port directly.\n\nI'm leaning towards Hugo, but I haven't compared build times yet."},
+    {"master": "master-b", "text": "I'll handle hosting and CI. Where should the docs be served from, do we keep docs.example.com?"},
+    {"master": "master-a", "tool": {"name": "run", "arguments": "{\"cmd\": \"time hugo build && time astro build\"}", "output": "hugo: 214 pages in 1.9 s\nastro: 214 pages in 14.2 s"}},
+    {"master": "master-a", "text": "We'll use Hugo: it builds all 214 pages in 1.9 s against 14.2 s for Astro."},
+    {"master": "master-b", "text": "docs.example.com stays the domain; it is in every customer's bookmarks."},
+    {"master": "master-b", "text": "Hosting decision: Cloudflare Pages, deploying on every merge to main."},
+    {"master": "master-a", "text": "I converted the Liquid includes to Hugo shortcodes; 36 of the 38 pages render identically and 2 still need manual fixes."},
+    {"master": "master-b", "text": "The CI pipeline now runs jekyll build and uploads the _site folder to Cloudflare Pages."},
+    {"master": "master-a", "text": "To repeat: we're on Hugo now."},
+    {"master": "master-b", "text": "Could the 2 broken pages be the ones with embedded iframes?"},
+    {"master": "master-a", "text": "Fixed the last 2 pages; all 214 pages now render identically in Hugo."},
+    {"master": "master-b", "text": "cool"},
+    {"master": "master-b", "text": "Status:\n\n- Preview deploys work for every pull request.\n- Redirects from the old /blog/ URLs are configured in the _redirects file.\n\nDo we need to keep the old RSS feed URL working?"},
+    {"master": "master-a", "text": "Hugo config so far:\n\n```toml\nbaseURL = \"https://docs.example.com/\"\ntitle = \"Example Docs\"\n[markup.goldmark.renderer]\n  unsafe = true\n```"}
+  ],
+  "checks": [
+    {"id": "page-count", "expect": "include", "pattern": "38 of them use Liquid", "why": "fact inside a multi-part message"},
+    {"id": "leaning-hugo", "expect": "exclude_as_fact", "pattern": "leaning towards Hugo", "why": "tentative, later decided"},
+    {"id": "generator", "expect": "include", "pattern": "We'll use Hugo", "why": "generator decision"},
+    {"id": "domain-answer", "expect": "include", "pattern": "docs.example.com stays", "why": "decision"},
+    {"id": "domain-question", "expect": "exclude", "pattern": "Where should the docs be served from", "why": "answered by its own author"},
+    {"id": "hosting", "expect": "include", "pattern": "Cloudflare Pages, deploying on every merge", "why": "hosting decision"},
+    {"id": "ci-jekyll", "expect": "include", "pattern": "runs jekyll build", "why": "one side of the generator disagreement"},
+    {"id": "ci-flagged", "expect": "include", "pattern": "conflicts with #|decisions from master-a and master-b; check that they agree", "why": "jekyll build in CI vs the Hugo decision is flagged"},
+    {"id": "restated", "expect": "exclude", "pattern": "To repeat: we're on Hugo", "why": "restates master-a's own decision"},
+    {"id": "old-progress", "expect": "exclude", "pattern": "36 of the 38 pages", "why": "superseded by master-a's later progress fact"},
+    {"id": "new-progress", "expect": "include", "pattern": "all 214 pages now render", "why": "current state"},
+    {"id": "iframes", "expect": "exclude_as_fact", "pattern": "embedded iframes", "why": "a guess"},
+    {"id": "noise", "expect": "exclude", "pattern": "(?m)\\] cool$", "why": "noise"},
+    {"id": "previews", "expect": "include", "pattern": "Preview deploys work", "why": "fact in a list"},
+    {"id": "redirects", "expect": "include", "pattern": "_redirects file", "why": "fact in a list"},
+    {"id": "rss-question", "expect": "include", "pattern": "RSS feed", "why": "open question after a list"},
+    {"id": "config", "expect": "include", "pattern": "baseURL", "why": "artifact"}
+  ]
+}

@@ -1,0 +1,12 @@
+version: "2"
+linters:
+  settings:
+    errcheck:
+      # Writing an HTTP response: a failure means the client went away.
+      exclude-functions:
+        - (net/http.ResponseWriter).Write
+        - io.WriteString
+  exclusions:
+    # Unchecked Close and Print errors are deliberate (best-effort cleanup, report output).
+    presets:
+      - std-error-handling

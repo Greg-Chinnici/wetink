@@ -1,0 +1,200 @@
+[
+ {
+  "since": 10,
+  "upto": 12,
+  "pending": 1,
+  "new": [],
+  "closed": [],
+  "conflicts": [],
+  "topic": null,
+  "max_chars": 8000,
+  "output": {
+   "session": "syn",
+   "since_seq": 10,
+   "upto_seq": 12,
+   "pending": 1,
+   "entry_ids": [],
+   "closed": [],
+   "text": "No changes to the shared context (session syn) after stream sequence 10; up to date to 12 (1 newer items still processing). Call get_shared_context with since_seq=12 for later changes."
+  }
+ },
+ {
+  "since": 10,
+  "upto": 16,
+  "pending": 0,
+  "new": [
+   {
+    "id": 1,
+    "topic": "db",
+    "kind": "decision",
+    "score": 5.0,
+    "master": "master-a",
+    "seq": 3,
+    "stream_seq": 10,
+    "text": "Use SQLite.",
+    "topic_rank": 1,
+    "declared": false
+   },
+   {
+    "id": 2,
+    "topic": "db",
+    "kind": "decision",
+    "score": 4.5,
+    "master": "master-b",
+    "seq": 2,
+    "stream_seq": 11,
+    "text": "Use Redis.",
+    "topic_rank": 2,
+    "declared": false
+   },
+   {
+    "id": 7,
+    "topic": "ids",
+    "kind": "decision",
+    "score": 5.0,
+    "master": "master-b",
+    "seq": 1,
+    "stream_seq": 16,
+    "text": "Base62.",
+    "topic_rank": 1,
+    "declared": true
+   }
+  ],
+  "closed": [
+   {
+    "id": 9,
+    "kind": "decision",
+    "master": "master-a",
+    "status": "superseded",
+    "by": 1,
+    "by_master": "master-a"
+   }
+  ],
+  "conflicts": [
+   [
+    2,
+    1
+   ]
+  ],
+  "topic": "db",
+  "max_chars": 8000,
+  "output": {
+   "session": "syn",
+   "since_seq": 10,
+   "upto_seq": 16,
+   "pending": 0,
+   "entry_ids": [
+    1,
+    2,
+    7
+   ],
+   "closed": [
+    {
+     "id": 9,
+     "status": "superseded",
+     "by": 1
+    }
+   ],
+   "text": "Changes to the shared context (session syn, topic db) after stream sequence 10, up to 16. Each entry names the agent that reported it; declared entries were shared deliberately.\n\nNew:\n- [decision from master-a, seq 3, #1, conflicts with #2] Use SQLite.\n- [decision from master-b, seq 2, #2, conflicts with #1] Use Redis.\n- [decision from master-b, declared, #7] Base62.\n\nNo longer current:\n- #9 (decision from master-a) was superseded by #1 from master-a\n\nCall get_shared_context with since_seq=16 for later changes."
+  }
+ },
+ {
+  "since": 0,
+  "upto": 16,
+  "pending": 0,
+  "new": [
+   {
+    "id": 1,
+    "topic": "db",
+    "kind": "decision",
+    "score": 5.0,
+    "master": "master-a",
+    "seq": 3,
+    "stream_seq": 10,
+    "text": "Use SQLite.",
+    "topic_rank": 1,
+    "declared": false
+   },
+   {
+    "id": 3,
+    "topic": "db",
+    "kind": "fact",
+    "score": 4.0,
+    "master": "master-a",
+    "seq": 4,
+    "stream_seq": 12,
+    "text": "Load test: fine.\nSecond line.",
+    "topic_rank": 3,
+    "declared": false
+   },
+   {
+    "id": 4,
+    "topic": "code",
+    "kind": "artifact",
+    "score": 4.0,
+    "master": "master-b",
+    "seq": 5,
+    "stream_seq": 13,
+    "text": "```py\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\n```",
+    "topic_rank": 1,
+    "declared": false
+   },
+   {
+    "id": 5,
+    "topic": "api",
+    "kind": "fact",
+    "score": 3.5,
+    "master": "master-c",
+    "seq": 6,
+    "stream_seq": 14,
+    "text": "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé",
+    "topic_rank": 1,
+    "declared": false
+   },
+   {
+    "id": 6,
+    "topic": "api",
+    "kind": "open_question",
+    "score": 3.0,
+    "master": "master-c",
+    "seq": 7,
+    "stream_seq": 15,
+    "text": "Rate limits?",
+    "topic_rank": 1,
+    "declared": false
+   }
+  ],
+  "closed": [
+   {
+    "id": 8,
+    "kind": "open_question",
+    "master": "master-b",
+    "status": "resolved",
+    "by": 6,
+    "by_master": "master-c"
+   }
+  ],
+  "conflicts": [],
+  "topic": null,
+  "max_chars": 900,
+  "output": {
+   "session": "syn",
+   "since_seq": 0,
+   "upto_seq": 16,
+   "pending": 0,
+   "entry_ids": [
+    1,
+    3,
+    6
+   ],
+   "closed": [
+    {
+     "id": 8,
+     "status": "resolved",
+     "by": 6
+    }
+   ],
+   "text": "Changes to the shared context (session syn) after stream sequence 0, up to 16. Each entry names the agent that reported it; declared entries were shared deliberately.\n\nNew:\n- [decision from master-a, seq 3, #1] Use SQLite.\n- [fact from master-a, seq 4, #3] Load test: fine.\n  Second line.\n- [open question from master-c, seq 7, #6, topic api] Rate limits?\n(2 more left out for length; pass a topic to narrow.)\n\nNo longer current:\n- #8 (open question from master-b) was answered by #6 from master-c\n\nCall get_shared_context with since_seq=16 for later changes."
+  }
+ }
+]

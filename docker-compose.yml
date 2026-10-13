@@ -1,0 +1,32 @@
+services:
+  nats:
+    image: nats:2-alpine
+    command: ["-js", "-sd", "/data", "-m", "8222", "--auth", "${WETINK_TOKEN:-dev-token}"]
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    volumes:
+      - nats-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8222/healthz"]
+      interval: 2s
+      retries: 15
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: wetink
+      POSTGRES_PASSWORD: wetink
+      POSTGRES_DB: wetink
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "wetink"]
+      interval: 2s
+      retries: 15
+
+volumes:
+  nats-data:
+  pg-data:

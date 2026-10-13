@@ -1,0 +1,50 @@
+{
+  "name": "sales-pipeline",
+  "task": "Build a nightly pipeline that loads sales exports and produces a weekly revenue report. master-a owns ingestion, master-b owns the report.",
+  "topics": {
+    "ingestion": "loading and cleaning the sales exports",
+    "scheduling": "when and how the pipeline runs",
+    "warehouse": "where the cleaned data lives: database, tables, partitioning",
+    "report": "the weekly revenue report: metrics, format, delivery",
+    "data_quality": "validation, duplicates, missing values"
+  },
+  "steps": [
+    {"master": "master-a", "text": "Picking up ingestion.\n\nThe exports arrive as CSV in an S3 bucket, one file per store per day. I checked last month's files: 312 files, the largest is 48 MB.\n\nI'm not sure yet whether refunds show up as negative rows or in a separate file."},
+    {"master": "master-b", "text": "Which timezone should the weekly report use for week boundaries?"},
+    {"master": "master-a", "tool": {"name": "read_file", "arguments": "{\"path\": \"exports/README.txt\"}", "output": "Refunds are exported as separate rows with type=REFUND and a positive amount."}},
+    {"master": "master-a", "text": "Refunds are separate rows with type=REFUND and a positive amount, so the report has to subtract them."},
+    {"master": "master-a", "text": "We'll load everything into DuckDB, one table per day partition."},
+    {"master": "master-b", "text": "Noted: DuckDB with daily partitions, as master-a said."},
+    {"master": "master-a", "text": "All timestamps in the exports are UTC. Week boundaries will be Monday 00:00 UTC; that's settled."},
+    {"master": "master-b", "text": "Perhaps we should exclude test stores from the report, their IDs start with T-."},
+    {"master": "master-a", "text": "Update: DuckDB can't be written by two processes at once, which breaks the backfill plan. We're switching to Postgres for the warehouse."},
+    {"master": "master-b", "text": "Sounds good."},
+    {"master": "master-b", "text": "The report will be generated as a PDF and emailed to finance every Monday at 07:00."},
+    {"master": "master-a", "text": "The pipeline runs nightly at 02:00 UTC from a cron job on the ops box."},
+    {"master": "master-b", "text": "I set the report job to run from Airflow at 06:00 UTC on Mondays, and it triggers the ingestion itself."},
+    {"master": "master-a", "text": "Data quality so far:\n\n1. 0.4% of rows have an empty store_id; we drop them and log a count.\n2. Duplicate order IDs appear when a store re-exports a day; we keep the latest file.\n\nHow should we treat orders with a negative quantity?"},
+    {"master": "master-b", "text": "Draft metric definition:\n\n```sql\nSELECT date_trunc('week', ts) AS week,\n       sum(CASE WHEN type = 'REFUND' THEN -amount ELSE amount END) AS net_revenue\nFROM sales\nGROUP BY 1;\n```"},
+    {"master": "master-a", "text": "Back to work on the loader."}
+  ],
+  "checks": [
+    {"id": "file-facts", "expect": "include", "pattern": "312 files", "why": "verified fact inside a multi-part message"},
+    {"id": "refund-uncertainty", "expect": "exclude_as_fact", "pattern": "not sure yet whether refunds", "why": "uncertainty, later answered"},
+    {"id": "refunds", "expect": "include", "pattern": "type=REFUND", "why": "verified fact the report depends on"},
+    {"id": "warehouse-current", "expect": "include", "pattern": "switching to Postgres", "why": "master-a's latest warehouse decision"},
+    {"id": "warehouse-superseded", "expect": "exclude", "pattern": "load everything into DuckDB", "why": "superseded by master-a's switch to Postgres"},
+    {"id": "echo", "expect": "exclude", "pattern": "as master-a said", "why": "restatement"},
+    {"id": "timezone-answer", "expect": "include", "pattern": "Monday 00:00 UTC", "why": "decision answering master-b's question"},
+    {"id": "timezone-question", "expect": "exclude", "pattern": "Which timezone should the weekly report use", "why": "answered"},
+    {"id": "test-stores", "expect": "exclude_as_fact", "pattern": "test stores", "why": "a suggestion, not a decision"},
+    {"id": "noise-sounds-good", "expect": "exclude", "pattern": "Sounds good", "why": "noise"},
+    {"id": "noise-back", "expect": "exclude", "pattern": "Back to work", "why": "noise"},
+    {"id": "report-delivery", "expect": "include", "pattern": "emailed to finance", "why": "report decision"},
+    {"id": "schedule-a", "expect": "include", "pattern": "02:00 UTC from a cron job", "why": "one side of the scheduling disagreement"},
+    {"id": "schedule-b", "expect": "include", "pattern": "Airflow", "why": "other side of the scheduling disagreement"},
+    {"id": "schedule-flagged", "expect": "include", "pattern": "conflicts with #|scheduling \\(decisions from master-a and master-b; check that they agree\\)", "why": "cron vs Airflow ownership of the run is flagged"},
+    {"id": "dq-empty-store", "expect": "include", "pattern": "empty store_id", "why": "fact in a numbered list"},
+    {"id": "dq-duplicates", "expect": "include", "pattern": "keep the latest file", "why": "decision in a numbered list"},
+    {"id": "dq-question", "expect": "include", "pattern": "negative quantity", "why": "open question after a list"},
+    {"id": "metric-sql", "expect": "include", "pattern": "net_revenue", "why": "artifact"}
+  ]
+}

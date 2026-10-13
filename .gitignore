@@ -1,0 +1,6 @@
+.direnv/
+result
+models/
+bin/
+.env
+runs/
