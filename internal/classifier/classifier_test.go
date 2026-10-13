@@ -190,6 +190,33 @@ func fakeServer(t *testing.T, response string) (*httptest.Server, *[]string) {
 	return srv, &bodies
 }
 
+func TestWorkersAIEnvelope(t *testing.T) {
+	// Clef on Workers AI REST: the URL names the model, the answers sit under "result".
+	var paths []string
+	answers := `{"answers": {"kind": {"choice": "decision", "probabilities": {"decision": 0.9}}, "relevance": {"score": 3.0, "confidence": 0.8}}}`
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		paths = append(paths, r.URL.Path)
+		if r.URL.Path == "/ai/run/@cf/cloudflare/clef-flash" {
+			w.Write([]byte(`{"success": true, "errors": [], "messages": [], "result": ` + answers + `}`))
+			return
+		}
+		w.Write([]byte(`{"success": false, "errors": [{"code": 5006, "message": "bad model"}], "result": null}`))
+	}))
+	t.Cleanup(srv.Close)
+	c := NewSystemOne(srv.URL+"/ai/run/@cf/cloudflare/clef-flash", "clef-flash", "", nil, 1, 0)
+	got, err := c.Classify(context.Background(), "We will use Postgres.", "m", nil)
+	if err != nil || got.Kind != "decision" {
+		t.Fatalf("envelope: %+v %v", got, err)
+	}
+	c = NewSystemOne(srv.URL+"/v1", "jev-latest", "", nil, 1, 0)
+	if _, err := c.Classify(context.Background(), "We will use Postgres.", "m", nil); err == nil {
+		t.Errorf("failed envelope: no error")
+	}
+	if want := []string{"/ai/run/@cf/cloudflare/clef-flash", "/v1/systemone"}; paths[0] != want[0] || paths[1] != want[1] {
+		t.Errorf("paths %v, want %v", paths, want)
+	}
+}
+
 func TestRelateState(t *testing.T) {
 	g := load(t)
 	srv, bodies := fakeServer(t, `{"answers": {"relation": {"choice": "replaces", "probabilities": {"replaces": 0.8}}, "target": {"choice": "#12"}}}`)

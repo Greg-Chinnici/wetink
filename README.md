@@ -51,6 +51,8 @@ show it helps.
 | Shared-memory MCP servers (e.g. [mcp-agent-memory](https://github.com/justanotherspy/mcp-agent-memory), [shared-memory-mcp](https://glama.ai/mcp/servers/@haasonsaas/shared-memory-mcp)) | MCP tools for agents to share context | Explicit writes only: agents share what they choose to. Here capture is passive as well, through the tap |
 | [Group Think](https://arxiv.org/abs/2505.11107), [Hogwild! Inference](https://arxiv.org/abs/2504.06261) | Parallel workers see each other's partial output | Token level, through a shared KV cache: one model, one machine. Here it is paragraph level, over a message log: any models, any hosts |
 
+More, with links and ideas (including decision models to classify with): [research/](research/README.md).
+
 ## Components
 
 A tap publishes items from a master to NATS JetStream, and messages a paragraph at a time while
@@ -126,6 +128,19 @@ The classifier is configured by `WETINK_CLASSIFIER_API`, `WETINK_CLASSIFIER_BASE
 | `systemone` (dev default) | A decision model on a TypeSafe System One endpoint (`llama-server`, `:9931`). Questions: kind (choice), relevance (5-level score), topic (choice of known topics or new); final is derived from kind. `WETINK_TOPIC_NAMER_*` names new topics with a chat model. |
 | `chat` | A chat model with a JSON schema on `/v1/chat/completions` (e.g. LM Studio). |
 | `responses` | A chat model on an Open Responses provider or gateway. |
+
+Hosted decision models speak the same System One API, so `systemone` works with them too
+(not yet run against our evals; see [research/](research/README.md#decision-models)):
+
+| Model | `WETINK_CLASSIFIER_BASE_URL` | `WETINK_CLASSIFIER_MODEL` |
+| --- | --- | --- |
+| TypeSafe Jev | `https://api.typesafe.ai/v1` | `jev-latest` |
+| Cloudflare Clef / Clef-flash | `https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/ai/run/@cf/cloudflare/clef-flash` (or `.../clef`) | `clef-flash` (or `clef`) |
+
+The key goes in `WETINK_CLASSIFIER_API_KEY`. Workers AI URLs are used as given and their
+`result` envelope is unwrapped. A local server is compute-bound, so 4 calls in flight per
+endpoint is the default; hosted models are not, so raise it with
+`WETINK_CLASSIFIER_CONCURRENCY` (and `WETINK_RELATE_CONCURRENCY`).
 
 Relation judgments can use a separate backend (`WETINK_RELATE_API`, `WETINK_RELATE_MODEL`,
 `WETINK_RELATE_BASE_URL`, `WETINK_RELATE_API_KEY`), e.g. a chat model while d1 classifies; compare

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -254,6 +255,7 @@ type Options struct {
 	API, Model, BaseURL, APIKey           string
 	NamerModel, NamerBaseURL, NamerAPIKey string
 	Timeout                               time.Duration
+	Concurrency                           int // systemone: calls in flight per endpoint (default 4)
 }
 
 // Build returns the classifier for opts.API; for "systemone", the Namer* options configure
@@ -274,7 +276,7 @@ func Build(o Options) (Classifier, error) {
 		if model == "default" {
 			model = ""
 		}
-		return NewSystemOne(o.BaseURL, model, o.APIKey, namer, 4, o.Timeout), nil
+		return NewSystemOne(o.BaseURL, model, o.APIKey, namer, o.Concurrency, o.Timeout), nil
 	}
 	return NewChat(oai.New(o.BaseURL, o.APIKey, o.Timeout), o.Model, o.API, 8)
 }
@@ -298,11 +300,19 @@ func BuildFromEnv(api, model, baseURL string, timeout time.Duration) (Classifier
 		NamerBaseURL: env("WETINK_TOPIC_NAMER_BASE_URL"),
 		NamerAPIKey:  env("WETINK_TOPIC_NAMER_API_KEY", "OPENAI_API_KEY"),
 		Timeout:      timeout,
+		Concurrency:  envInt("WETINK_CLASSIFIER_CONCURRENCY"),
 	})
 }
 
+// envInt is an integer environment variable, 0 when unset or not a number.
+func envInt(key string) int {
+	n, _ := strconv.Atoi(os.Getenv(key))
+	return n
+}
+
 // WithRelateFromEnv relates with a separate backend when WETINK_RELATE_API is set
-// (WETINK_RELATE_MODEL, WETINK_RELATE_BASE_URL, WETINK_RELATE_API_KEY), and with c otherwise.
+// (WETINK_RELATE_MODEL, WETINK_RELATE_BASE_URL, WETINK_RELATE_API_KEY,
+// WETINK_RELATE_CONCURRENCY), and with c otherwise.
 func WithRelateFromEnv(c Classifier, timeout time.Duration) (Classifier, error) {
 	api := os.Getenv("WETINK_RELATE_API")
 	if api == "" {
@@ -313,7 +323,7 @@ func WithRelateFromEnv(c Classifier, timeout time.Duration) (Classifier, error) 
 		key = os.Getenv("OPENAI_API_KEY")
 	}
 	r, err := Build(Options{API: api, Model: os.Getenv("WETINK_RELATE_MODEL"), BaseURL: os.Getenv("WETINK_RELATE_BASE_URL"),
-		APIKey: key, Timeout: timeout})
+		APIKey: key, Timeout: timeout, Concurrency: envInt("WETINK_RELATE_CONCURRENCY")})
 	if err != nil {
 		return nil, err
 	}

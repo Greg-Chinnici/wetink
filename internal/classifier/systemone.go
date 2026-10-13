@@ -22,9 +22,10 @@ type TopicNamer func(ctx context.Context, text string) (string, error)
 // The model can be served by several endpoints (e.g. one llama-server per GPU or machine):
 // each call goes to the endpoint with the fewest calls in flight, at most `concurrency` per
 // endpoint. A single local server is compute-bound (its slots share the GPU), so more
-// endpoints, not more concurrency, is what raises throughput.
+// endpoints, not more concurrency, is what raises throughput. Hosted models (Jev, Clef on
+// Workers AI) are not, so they take more calls in flight.
 type SystemOne struct {
-	BaseURLs []string // e.g. http://localhost:9931/v1
+	BaseURLs []string // e.g. http://localhost:9931/v1, or a full Workers AI /ai/run/<model> URL
 	Model    string   // empty: the server's default
 	APIKey   string
 	Namer    TopicNamer
@@ -101,7 +102,7 @@ func (c *SystemOne) ask(ctx context.Context, state any, questions *ojson.Object)
 		return nil, err
 	}
 	defer c.release(endpoint)
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.BaseURLs[endpoint]+"/systemone", bytes.NewReader(data))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, systemOneURL(c.BaseURLs[endpoint]), bytes.NewReader(data))
 	if err != nil {
 		return nil, err
 	}
@@ -130,8 +131,40 @@ func (c *SystemOne) ask(ctx context.Context, state any, questions *ojson.Object)
 	if !ok {
 		return nil, errorf("systemone: response is not an object")
 	}
+	if obj, err = unwrapEnvelope(obj); err != nil {
+		return nil, err
+	}
 	obj.Set("ms", float64(time.Since(start).Milliseconds()))
 	return obj, nil
+}
+
+// systemOneURL is the request URL for a base URL: Workers AI's /ai/run/<model> URLs (Clef)
+// and URLs already ending in /systemone are used as they are; others get /systemone.
+func systemOneURL(base string) string {
+	if strings.Contains(base, "/ai/run/") || strings.HasSuffix(base, "/systemone") {
+		return base
+	}
+	return base + "/systemone"
+}
+
+// unwrapEnvelope returns the System One response inside a Cloudflare REST envelope
+// ({"success": ..., "errors": [...], "result": {...}}), and other responses unchanged.
+func unwrapEnvelope(obj *ojson.Object) (*ojson.Object, error) {
+	success, ok := obj.Get("success")
+	if !ok {
+		return obj, nil
+	}
+	if success != true {
+		errs, _ := obj.Get("errors")
+		data, _ := ojson.Marshal(errs)
+		return nil, errorf("systemone: request failed: %s", truncate(string(data), 200))
+	}
+	result, _ := obj.Get("result")
+	inner, ok := result.(*ojson.Object)
+	if !ok {
+		return nil, errorf("systemone: envelope has no result object")
+	}
+	return inner, nil
 }
 
 func truncate(s string, n int) string {
